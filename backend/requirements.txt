@@ -1,4 +1,12 @@
 Django==4.2.3
 djangorestframework==3.14.0
 django-cors-headers==4.2.0
-python-dotenv==1.0.0 
+python-dotenv==1.0.0
+requests==2.31.0
+python-dateutil==2.8.2
+argparse==1.4.0
+decimal-js==1.1.1
+pathlib==1.0.1
+asgiref==3.7.2
+pytz==2023.3
+sqlparse==0.4.4 
