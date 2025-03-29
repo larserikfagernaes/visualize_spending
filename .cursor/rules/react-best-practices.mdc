@@ -1,0 +1,262 @@
+---
+description: React Best Practices
+globs: frontend/src/**/*.js, frontend/src/**/*.jsx, frontend/src/**/*.tsx
+---
+# React Best Practices
+
+Rules and guidelines for writing clean, maintainable and high-performance React code.
+
+<rule>
+name: react_hooks_rules
+description: Enforce the Rules of Hooks to ensure hooks are called in a consistent order
+filters:
+  - type: file_extension
+    pattern: "\\.(js|jsx|tsx)$"
+  - type: content
+    pattern: "(?:import|require).*?['\"]react['\"]"
+  - type: content
+    pattern: "\\W(use[A-Z]\\w+)\\W"
+
+actions:
+  - type: suggest
+    conditions:
+      - pattern: "(?s)(if|switch|for|while|\\?.+:).*?\\b(use[A-Z]\\w+)\\("
+        message: "React Hooks should not be called conditionally. Move this hook outside of conditionals."
+    
+  - type: suggest
+    conditions:
+      - pattern: "function\\s+\\w+\\s*\\([^)]*\\)\\s*{.*?return.*?\\b(use[A-Z]\\w+)\\("
+        message: "React Hooks should not be called after a return statement. Move this hook to the top level of your component."
+    
+  - type: suggest
+    message: |
+      **React Hooks Rules:**
+      
+      1. Only call Hooks at the top level of your React component or custom Hook
+      2. Don't call Hooks inside loops, conditions, or nested functions
+      3. Always use Hooks in the same order for every component render
+      4. Prefix custom Hook names with "use" (e.g., useCustomHook)
+      5. Place data fetching in useEffect, not in the component body
+
+examples:
+  - input: |
+      function MyComponent() {
+        if (condition) {
+          useEffect(() => {
+            // Do something
+          }, []);
+        }
+        return <div />;
+      }
+    output: |
+      function MyComponent() {
+        useEffect(() => {
+          if (condition) {
+            // Do something
+          }
+        }, [condition]);
+        return <div />;
+      }
+</rule>
+
+<rule>
+name: react_dependencies_array
+description: Ensure the useEffect and useCallback dependency arrays include all referenced values
+filters:
+  - type: file_extension
+    pattern: "\\.(js|jsx|tsx)$"
+  - type: content
+    pattern: "\\buseEffect\\(|\\buseCallback\\(|\\buseMemo\\("
+
+actions:
+  - type: suggest
+    conditions:
+      - pattern: "(?s)\\b(useEffect|useCallback|useMemo)\\(\\([^)]*\\)\\s*=>\\s*{.*?\\b(\\w+)\\b.*?},\\s*\\[([^\\]]*)\\]\\)"
+        validation: "!$3.includes($2) && !['document', 'window', 'console', 'Math', 'JSON', 'parseInt', 'navigator'].includes($2)"
+        message: "The dependency array should include all values referenced inside the callback that could change over time. Consider adding '$2' to the dependency array."
+      
+  - type: suggest
+    message: |
+      **Dependency Array Best Practices:**
+      
+      1. Include all variables and functions that are used inside the Hook and defined outside it
+      2. Omit `setState` functions - they are guaranteed to be stable
+      3. Omit built-in browser APIs or global objects (document, window, etc.)
+      4. Use the eslint-plugin-react-hooks to catch dependency errors
+      5. Move frequently changing dependencies outside the Hook or use refs for values that shouldn't cause re-renders
+
+examples:
+  - input: |
+      function MyComponent({ id, name }) {
+        useEffect(() => {
+          console.log(id, name);
+        }, [id]);
+      }
+    output: |
+      function MyComponent({ id, name }) {
+        useEffect(() => {
+          console.log(id, name);
+        }, [id, name]);
+      }
+</rule>
+
+<rule>
+name: react_prop_types
+description: Enforce proper prop type validation for React components
+filters:
+  - type: file_extension
+    pattern: "\\.(js|jsx)$"
+  - type: content
+    pattern: "(?:import|require).*?['\"]react['\"]"
+  - type: content
+    pattern: "(?:class\\s+\\w+\\s+extends\\s+React\\.Component|function\\s+\\w+\\s*\\(\\s*\\{)"
+
+actions:
+  - type: suggest
+    conditions:
+      - pattern: "function\\s+(\\w+)\\s*\\(\\s*\\{[^}]*\\}\\s*\\).*?\\{(?![\\s\\S]*?\\1\\.propTypes)"
+        validation: "!$0.includes('React.memo') && !$0.includes('memo')"
+        message: "Consider adding PropTypes to component '$1' to document the interface and catch bugs early."
+    
+  - type: suggest
+    message: |
+      **PropTypes Best Practices:**
+      
+      1. Define PropTypes for all components that receive props
+      2. Specify `isRequired` for props that are necessary for the component to function properly
+      3. Use specific type validators (e.g., `PropTypes.string` instead of `PropTypes.any`)
+      4. Consider using TypeScript for static type checking as an alternative
+      5. Document complex prop shapes with `PropTypes.shape`
+      6. Set default values with `defaultProps` for non-required props
+      
+      Example:
+      ```jsx
+      import PropTypes from 'prop-types';
+      
+      function MyComponent({ name, age, children }) {
+        return (
+          <div>
+            <h1>{name} ({age})</h1>
+            {children}
+          </div>
+        );
+      }
+      
+      MyComponent.propTypes = {
+        name: PropTypes.string.isRequired,
+        age: PropTypes.number,
+        children: PropTypes.node
+      };
+      
+      MyComponent.defaultProps = {
+        age: 30
+      };
+      ```
+
+examples:
+  - input: |
+      function UserProfile({ name, age, bio }) {
+        return (
+          <div>
+            <h2>{name}</h2>
+            <p>Age: {age}</p>
+            <p>{bio}</p>
+          </div>
+        );
+      }
+      
+      export default UserProfile;
+    output: |
+      import PropTypes from 'prop-types';
+      
+      function UserProfile({ name, age, bio }) {
+        return (
+          <div>
+            <h2>{name}</h2>
+            <p>Age: {age}</p>
+            <p>{bio}</p>
+          </div>
+        );
+      }
+      
+      UserProfile.propTypes = {
+        name: PropTypes.string.isRequired,
+        age: PropTypes.number.isRequired,
+        bio: PropTypes.string
+      };
+      
+      export default UserProfile;
+</rule>
+
+<rule>
+name: react_performance_optimizations
+description: Identify potential performance issues and suggest optimizations
+filters:
+  - type: file_extension
+    pattern: "\\.(js|jsx|tsx)$"
+  - type: content
+    pattern: "(?:import|require).*?['\"]react['\"]"
+
+actions:
+  - type: suggest
+    conditions:
+      - pattern: "function\\s+(\\w+).*?\\{[\\s\\S]*?return\\s+\\([\\s\\S]*?<.*?\\{(?:[^{}]|\\{[^{}]*\\})*?\\.[^{}]*?\\}.*?>[\\s\\S]*?"
+        validation: "!$0.includes('useMemo') && !$0.includes('memo') && !$0.includes('React.memo') && !$1.match(/^use[A-Z]/)"
+        message: "Consider using useMemo or React.memo to prevent unnecessary re-renders of complex calculated values inside JSX."
+    
+  - type: suggest
+    conditions:
+      - pattern: "function\\s+(\\w+).*?\\{[\\s\\S]*?const\\s+(\\w+)\\s*=\\s*\\([^)]*\\)\\s*=>\\s*\\{[\\s\\S]*?\\}[\\s\\S]*?return[\\s\\S]*?\\}"
+        validation: "!$0.includes('useCallback') && !$1.match(/^use[A-Z]/)"
+        message: "Consider using useCallback for function '$2' to prevent unnecessary recreations on each render."
+    
+  - type: suggest
+    message: |
+      **React Performance Optimization Best Practices:**
+      
+      1. Use `React.memo()` for pure functional components that render often with the same props
+      2. Use `useCallback()` for functions passed as props to child components
+      3. Use `useMemo()` for expensive calculations that shouldn't be recalculated on every render
+      4. Virtualize long lists using `react-window` or `react-virtualized`
+      5. Implement lazy loading for routes and large components with `React.lazy()`
+      6. Split large components into smaller ones for better re-rendering optimization
+      7. Use the React DevTools Profiler to identify performance bottlenecks
+
+examples:
+  - input: |
+      function ExpensiveComponent({ data }) {
+        const processedData = data.map(item => {
+          // Expensive operation
+          return transformItem(item);
+        });
+        
+        return (
+          <div>
+            {processedData.map(item => (
+              <Item key={item.id} {...item} />
+            ))}
+          </div>
+        );
+      }
+    output: |
+      function ExpensiveComponent({ data }) {
+        const processedData = useMemo(() => {
+          return data.map(item => {
+            // Expensive operation
+            return transformItem(item);
+          });
+        }, [data]);
+        
+        return (
+          <div>
+            {processedData.map(item => (
+              <Item key={item.id} {...item} />
+            ))}
+          </div>
+        );
+      }
+</rule>
+
+metadata:
+  priority: high
+  version: 1.0 

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CORS Test</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    button {
+      padding: 10px 15px;
+      background-color: #1976d2;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-right: 10px;
+      margin-bottom: 20px;
+    }
+    pre {
+      background-color: #f5f5f5;
+      padding: 10px;
+      border-radius: 5px;
+      overflow: auto;
+      max-height: 400px;
+    }
+    .success {
+      color: green;
+      font-weight: bold;
+    }
+    .error {
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>CORS API Test</h1>
+  <p>This page provides a direct test of the API connection, bypassing the React framework.</p>
+  
+  <div>
+    <button id="testOptionsBtn">Test OPTIONS/Preflight</button>
+    <button id="testGetBtn">Test GET Request</button>
+    <button id="clearResultsBtn">Clear Results</button>
+  </div>
+  
+  <div id="results"></div>
+  
+  <script>
+    const resultsEl = document.getElementById('results');
+    const API_URL = 'http://localhost:8000/api/v1';
+    const AUTH = btoa('dev:dev');
+    
+    // Clear results
+    document.getElementById('clearResultsBtn').addEventListener('click', () => {
+      resultsEl.innerHTML = '';
+    });
+    
+    // Helper to display results
+    function appendResult(title, content, isError = false) {
+      const resultEl = document.createElement('div');
+      resultEl.innerHTML = `
+        <h3>${title}</h3>
+        <pre class="${isError ? 'error' : 'success'}">${content}</pre>
+      `;
+      resultsEl.appendChild(resultEl);
+    }
+    
+    // Test OPTIONS/preflight request
+    document.getElementById('testOptionsBtn').addEventListener('click', async () => {
+      const endpoint = '/bank-accounts/';
+      const url = API_URL + endpoint;
+      
+      appendResult('Testing OPTIONS/Preflight Request', `URL: ${url}\nOrigin: ${window.location.origin}`);
+      
+      try {
+        const response = await fetch(url, {
+          method: 'OPTIONS',
+          mode: 'cors',
+          credentials: 'include',
+          headers: {
+            'Access-Control-Request-Method': 'GET',
+            'Access-Control-Request-Headers': 'content-type,authorization',
+            'Origin': window.location.origin
+          }
+        });
+        
+        const headers = {};
+        response.headers.forEach((value, key) => {
+          headers[key] = value;
+        });
+        
+        appendResult(
+          'Preflight Response', 
+          `Status: ${response.status} ${response.statusText}\n\nHeaders:\n${JSON.stringify(headers, null, 2)}`
+        );
+      } catch (error) {
+        appendResult('Preflight Error', `${error.name}: ${error.message}\n\n${error.stack}`, true);
+      }
+    });
+    
+    // Test GET request
+    document.getElementById('testGetBtn').addEventListener('click', async () => {
+      const endpoints = [
+        { name: 'Bank Accounts', path: '/bank-accounts/' },
+        { name: 'Categories', path: '/categories/' },
+        { name: 'Transactions', path: '/transactions/' }
+      ];
+      
+      for (const endpoint of endpoints) {
+        const url = API_URL + endpoint.path;
+        
+        appendResult(
+          `Testing GET ${endpoint.name}`, 
+          `URL: ${url}\nOrigin: ${window.location.origin}\nAuth: Basic ${AUTH}`
+        );
+        
+        try {
+          const response = await fetch(url, {
+            method: 'GET',
+            mode: 'cors',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Basic ${AUTH}`,
+              'X-Requested-With': 'XMLHttpRequest'
+            }
+          });
+          
+          const headers = {};
+          response.headers.forEach((value, key) => {
+            headers[key] = value;
+          });
+          
+          if (response.ok) {
+            const data = await response.json();
+            appendResult(
+              `${endpoint.name} Response`, 
+              `Status: ${response.status} ${response.statusText}\n\nHeaders:\n${JSON.stringify(headers, null, 2)}\n\nData:\n${JSON.stringify(data, null, 2).substring(0, 500)}${JSON.stringify(data, null, 2).length > 500 ? '...' : ''}`
+            );
+          } else {
+            appendResult(
+              `${endpoint.name} Error Response`, 
+              `Status: ${response.status} ${response.statusText}\n\nHeaders:\n${JSON.stringify(headers, null, 2)}`,
+              true
+            );
+          }
+        } catch (error) {
+          appendResult(
+            `${endpoint.name} Error`, 
+            `${error.name}: ${error.message}\n\n${error.stack}`, 
+            true
+          );
+        }
+      }
+    });
+  </script>
+</body>
+</html> 

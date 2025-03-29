@@ -17,15 +17,27 @@ import {
   Chip,
   CircularProgress,
   TablePagination,
-  InputAdornment
+  InputAdornment,
+  TableSortLabel,
+  Button
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import SaveIcon from '@mui/icons-material/Save';
+import GetAppIcon from '@mui/icons-material/GetApp';
 import axios from 'axios';
+import TransactionDetailModal from './TransactionDetailModal';
 
-const API_URL = 'http://localhost:8000/api';
+const API_URL = 'http://localhost:8000/api/v1';
 
-const TransactionList = ({ transactions = [], categories = [], onUpdate, loading, loadingProgress }) => {
+const TransactionList = ({ 
+  transactions = [], 
+  categories = [], 
+  onUpdate, 
+  loading, 
+  loadingProgress, 
+  showingAllTransactions = false,
+  activeFilters = {}
+}) => {
   // State
   const [filteredTransactions, setFilteredTransactions] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -33,10 +45,19 @@ const TransactionList = ({ transactions = [], categories = [], onUpdate, loading
   const [bankAccountFilter, setBankAccountFilter] = useState('');
   const [accountIdFilter, setAccountIdFilter] = useState('');
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(100);
   const [editingTransaction, setEditingTransaction] = useState(null);
   const [bankAccounts, setBankAccounts] = useState([]);
   const [accountIds, setAccountIds] = useState([]);
+  // Add sort state
+  const [sortConfig, setSortConfig] = useState({
+    key: null,
+    direction: 'asc'
+  });
+
+  // State for transaction detail modal
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedTransaction, setSelectedTransaction] = useState(null);
 
   // Ensure transactions and categories are always arrays
   const transactionData = Array.isArray(transactions) ? transactions : [];
@@ -51,9 +72,13 @@ const TransactionList = ({ transactions = [], categories = [], onUpdate, loading
   // Extract unique bank accounts and account IDs from transactions
   useEffect(() => {
     if (Array.isArray(transactions) && transactions.length > 0) {
-      // Extract bank accounts
+      // Extract bank accounts - use account_id if bank_account fields are not available
       const accounts = transactions
-        .map(transaction => transaction.bank_account_id)
+        .map(transaction => 
+          transaction.bank_account_name || 
+          transaction.bank_account_id || 
+          (transaction.account_id ? `Account: ${transaction.account_id}` : null)
+        )
         .filter((account, index, self) => 
           account && self.indexOf(account) === index
         )
@@ -116,7 +141,10 @@ const TransactionList = ({ transactions = [], categories = [], onUpdate, loading
     // Filter by bank account
     if (bankAccountFilter) {
       filtered = filtered.filter(transaction => 
-        transaction.bank_account_id === bankAccountFilter
+        transaction.bank_account_name === bankAccountFilter || 
+        transaction.bank_account_id === bankAccountFilter ||
+        (bankAccountFilter.startsWith('Account: ') && 
+         `Account: ${transaction.account_id}` === bankAccountFilter)
       );
       console.log(`After bank account filtering: ${filtered.length} transactions`);
     }
@@ -209,12 +237,210 @@ const TransactionList = ({ transactions = [], categories = [], onUpdate, loading
     }
   };
 
+  // Handler for row click
+  const handleRowClick = async (transaction) => {
+    let transactionWithData = transaction;
+    
+    // If transaction doesn't have raw_data, fetch it from the API
+    if (!transaction.raw_data) {
+      console.log(`Transaction ${transaction.id} has no raw_data, fetching from API`);
+      
+      // Set loading state for the modal
+      setSelectedTransaction({
+        ...transaction,
+        _loading: true,
+        _error: null
+      });
+      setModalOpen(true);
+      
+      try {
+        console.log(`Fetching raw data for transaction ${transaction.id} (tripletex_id: ${transaction.tripletex_id || 'none'})`);
+        const response = await axios.get(`${API_URL}/transactions/${transaction.id}/detail_with_raw_data/`);
+        
+        if (response.data && response.data.raw_data) {
+          console.log(`Successfully fetched raw_data for transaction ${transaction.id}`);
+          transactionWithData = response.data;
+          
+          // Update the transaction in filtered transactions to cache the raw_data
+          setFilteredTransactions(prevTransactions => 
+            prevTransactions.map(t => 
+              t.id === transaction.id ? transactionWithData : t
+            )
+          );
+          
+          setSelectedTransaction(transactionWithData);
+        } else {
+          console.warn(`Received response but no raw_data for transaction ${transaction.id}`);
+          setSelectedTransaction({
+            ...transaction,
+            _loading: false,
+            _error: 'Transaction details could not be loaded. The data may be unavailable.'
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching transaction details:', error);
+        setSelectedTransaction({
+          ...transaction,
+          _loading: false,
+          _error: error.response?.data?.error || 'Failed to load transaction details. Please try again.'
+        });
+      }
+    } else {
+      console.log(`Transaction ${transaction.id} already has raw_data`);
+      setSelectedTransaction(transaction);
+      setModalOpen(true);
+    }
+  };
+
+  // Handler for closing the modal
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setSelectedTransaction(null);
+  };
+
+  // Add sorting handler
+  const handleSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+    
+    // Reset to first page when sorting changes
+    setPage(0);
+  };
+
+  // Sort transactions based on sort configuration
+  const sortedTransactions = React.useMemo(() => {
+    if (!sortConfig.key) return filteredTransactions;
+    
+    return [...filteredTransactions].sort((a, b) => {
+      // Handle numeric sorting for amount
+      if (sortConfig.key === 'amount') {
+        const aValue = parseFloat(a[sortConfig.key]) || 0;
+        const bValue = parseFloat(b[sortConfig.key]) || 0;
+        
+        return sortConfig.direction === 'asc' 
+          ? aValue - bValue 
+          : bValue - aValue;
+      }
+      
+      // Default string sorting for other fields
+      if (a[sortConfig.key] < b[sortConfig.key]) {
+        return sortConfig.direction === 'asc' ? -1 : 1;
+      }
+      if (a[sortConfig.key] > b[sortConfig.key]) {
+        return sortConfig.direction === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+  }, [filteredTransactions, sortConfig]);
+
+  // Calculate the total sum of all filtered transactions
+  const totalAmount = React.useMemo(() => {
+    if (!filteredTransactions || filteredTransactions.length === 0) return 0;
+    
+    return filteredTransactions.reduce((sum, transaction) => {
+      const amount = parseFloat(transaction.amount) || 0;
+      return sum + amount;
+    }, 0);
+  }, [filteredTransactions]);
+
+  // Export transactions to CSV
+  const exportToCSV = () => {
+    if (!filteredTransactions || filteredTransactions.length === 0) {
+      console.warn('No transactions to export');
+      return;
+    }
+    
+    // Define CSV columns
+    const headers = ['Date', 'Description', 'Amount', 'Bank Account', 'Account ID', 'Category'];
+    
+    // Convert filtered transactions to CSV rows
+    const rows = filteredTransactions.map(transaction => [
+      formatDate(transaction.date),
+      // Escape quotes in description by doubling them
+      `"${(transaction.description || '').replace(/"/g, '""')}"`,
+      transaction.amount,
+      transaction.bank_account_name || transaction.bank_account_id || 'Unknown',
+      transaction.account_id || 'N/A',
+      transaction.category_name || 'Uncategorized'
+    ]);
+    
+    // Create CSV content
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.join(','))
+    ].join('\n');
+    
+    // Create a blob and download link
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `transactions_export_${new Date().toISOString().slice(0, 10)}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <Card>
       <CardContent>
-        <Typography variant="h6" gutterBottom>
-          Transactions
-        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+          <Typography variant="h6">
+            Transactions
+          </Typography>
+          
+          {/* Active filters display */}
+          {Object.values(activeFilters).some(value => value) && (
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+              {activeFilters.hideInternalTransfers && (
+                <Chip size="small" label="No Internal Transfers" color="primary" variant="outlined" />
+              )}
+              {activeFilters.hideWageTransfers && (
+                <Chip size="small" label="No Wage Transfers" color="primary" variant="outlined" />
+              )}
+              {activeFilters.hideTaxTransfers && (
+                <Chip size="small" label="No Tax Transfers" color="primary" variant="outlined" />
+              )}
+              {activeFilters.showOnlyProcessable && (
+                <Chip size="small" label="Only Processable" color="primary" variant="outlined" />
+              )}
+            </Box>
+          )}
+        </Box>
+
+        {/* Display total sum */}
+        <Box sx={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center', 
+          mb: 3, 
+          p: 2, 
+          bgcolor: totalAmount < 0 ? 'rgba(255, 0, 0, 0.04)' : 'rgba(0, 128, 0, 0.04)', 
+          borderRadius: 1,
+          border: '1px solid rgba(0, 0, 0, 0.12)'
+        }}>
+          <Box>
+            <Typography variant="subtitle1" fontWeight="medium">
+              Total Amount
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {filteredTransactions.length} transactions
+            </Typography>
+          </Box>
+          <Chip
+            label={new Intl.NumberFormat('nb-NO', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+            }).format(totalAmount)}
+            color={totalAmount < 0 ? "error" : "success"}
+            size="medium"
+            sx={{ fontWeight: 'bold', fontSize: '1.1rem', py: 0.5, px: 0.5 }}
+          />
+        </Box>
         
         {/* Debug section - only visible during development */}
         {process.env.NODE_ENV === 'development' && (
@@ -225,7 +451,9 @@ const TransactionList = ({ transactions = [], categories = [], onUpdate, loading
               Filtered count: {filteredTransactions.length}<br />
               Categories count: {categoriesList.length}<br />
               Bank accounts count: {bankAccounts.length}<br />
-              Account IDs count: {accountIds.length}
+              Account IDs count: {accountIds.length}<br />
+              All transactions loaded: {showingAllTransactions ? 'Yes' : 'No (first page only)'}<br />
+              Universal filters active: Yes (applied from App component)
             </Typography>
             {Array.isArray(transactions) && transactions.length > 0 && (
               <Box sx={{ mt: 1 }}>
@@ -238,70 +466,82 @@ const TransactionList = ({ transactions = [], categories = [], onUpdate, loading
           </Box>
         )}
         
-        <Box sx={{ display: 'flex', mb: 2, gap: 2, flexWrap: 'wrap' }}>
-          <TextField
-            label="Search"
+        <Box sx={{ display: 'flex', mb: 2, gap: 2, flexWrap: 'wrap', justifyContent: 'space-between' }}>
+          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', flexGrow: 1 }}>
+            <TextField
+              label="Search"
+              variant="outlined"
+              size="small"
+              value={searchTerm}
+              onChange={handleSearchChange}
+              sx={{ flexGrow: 1, minWidth: '200px' }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <TextField
+              select
+              label="Category"
+              variant="outlined"
+              size="small"
+              value={categoryFilter}
+              onChange={handleCategoryFilterChange}
+              sx={{ minWidth: '150px' }}
+            >
+              <MenuItem value="">All Categories</MenuItem>
+              {categoriesList.map((category) => (
+                <MenuItem key={category.id} value={category.id}>
+                  {category.name}
+                </MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              select
+              label="Bank Account"
+              variant="outlined"
+              size="small"
+              value={bankAccountFilter}
+              onChange={handleBankAccountFilterChange}
+              sx={{ minWidth: '150px' }}
+            >
+              <MenuItem value="">All Bank Accounts</MenuItem>
+              {bankAccounts.map((account) => (
+                <MenuItem key={account} value={account}>
+                  {account}
+                </MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              select
+              label="Account ID"
+              variant="outlined"
+              size="small"
+              value={accountIdFilter}
+              onChange={handleAccountIdFilterChange}
+              sx={{ minWidth: '150px' }}
+            >
+              <MenuItem value="">All Account IDs</MenuItem>
+              {accountIds.map((id) => (
+                <MenuItem key={id} value={id}>
+                  {id}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Box>
+          <Button
             variant="outlined"
+            startIcon={<GetAppIcon />}
+            onClick={exportToCSV}
+            disabled={filteredTransactions.length === 0}
             size="small"
-            value={searchTerm}
-            onChange={handleSearchChange}
-            sx={{ flexGrow: 1, minWidth: '200px' }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-          <TextField
-            select
-            label="Category"
-            variant="outlined"
-            size="small"
-            value={categoryFilter}
-            onChange={handleCategoryFilterChange}
-            sx={{ minWidth: '150px' }}
+            sx={{ height: 40 }}
           >
-            <MenuItem value="">All Categories</MenuItem>
-            {categoriesList.map((category) => (
-              <MenuItem key={category.id} value={category.id}>
-                {category.name}
-              </MenuItem>
-            ))}
-          </TextField>
-          <TextField
-            select
-            label="Bank Account"
-            variant="outlined"
-            size="small"
-            value={bankAccountFilter}
-            onChange={handleBankAccountFilterChange}
-            sx={{ minWidth: '150px' }}
-          >
-            <MenuItem value="">All Bank Accounts</MenuItem>
-            {bankAccounts.map((account) => (
-              <MenuItem key={account} value={account}>
-                {account}
-              </MenuItem>
-            ))}
-          </TextField>
-          <TextField
-            select
-            label="Account ID"
-            variant="outlined"
-            size="small"
-            value={accountIdFilter}
-            onChange={handleAccountIdFilterChange}
-            sx={{ minWidth: '150px' }}
-          >
-            <MenuItem value="">All Account IDs</MenuItem>
-            {accountIds.map((id) => (
-              <MenuItem key={id} value={id}>
-                {id}
-              </MenuItem>
-            ))}
-          </TextField>
+            Download CSV
+          </Button>
         </Box>
         
         {loading ? (
@@ -321,7 +561,15 @@ const TransactionList = ({ transactions = [], categories = [], onUpdate, loading
                   <TableRow>
                     <TableCell>Date</TableCell>
                     <TableCell>Description</TableCell>
-                    <TableCell align="right">Amount</TableCell>
+                    <TableCell align="right">
+                      <TableSortLabel
+                        active={sortConfig.key === 'amount'}
+                        direction={sortConfig.key === 'amount' ? sortConfig.direction : 'asc'}
+                        onClick={() => handleSort('amount')}
+                      >
+                        Amount
+                      </TableSortLabel>
+                    </TableCell>
                     <TableCell>Bank Account</TableCell>
                     <TableCell>Account ID</TableCell>
                     <TableCell>Category</TableCell>
@@ -329,10 +577,14 @@ const TransactionList = ({ transactions = [], categories = [], onUpdate, loading
                 </TableHead>
                 <TableBody>
                   {filteredTransactions.length > 0 ? (
-                    filteredTransactions
+                    sortedTransactions
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((transaction) => (
-                        <TableRow key={transaction.id || Math.random()}>
+                        <TableRow 
+                          key={transaction.id || Math.random()}
+                          onClick={() => handleRowClick(transaction)}
+                          sx={{ cursor: 'pointer', '&:hover': { bgcolor: 'rgba(0, 0, 0, 0.04)' } }}
+                        >
                           <TableCell>{formatDate(transaction.date)}</TableCell>
                           <TableCell>{transaction.description || ''}</TableCell>
                           <TableCell align="right">
@@ -344,12 +596,14 @@ const TransactionList = ({ transactions = [], categories = [], onUpdate, loading
                             />
                           </TableCell>
                           <TableCell>
-                            {transaction.bank_account_id || 'Unknown'}
+                            {transaction.bank_account_name || 
+                             transaction.bank_account_id || 
+                             (transaction.account_id ? `Account: ${transaction.account_id}` : 'Unknown')}
                           </TableCell>
                           <TableCell>
                             {transaction.account_id || 'N/A'}
                           </TableCell>
-                          <TableCell>
+                          <TableCell onClick={(e) => e.stopPropagation()}>
                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                               <TextField
                                 select
@@ -370,7 +624,10 @@ const TransactionList = ({ transactions = [], categories = [], onUpdate, loading
                                 <IconButton 
                                   size="small" 
                                   color="primary"
-                                  onClick={() => handleSaveCategory(transaction.id, transaction.category)}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleSaveCategory(transaction.id, transaction.category);
+                                  }}
                                 >
                                   <SaveIcon />
                                 </IconButton>
@@ -390,17 +647,29 @@ const TransactionList = ({ transactions = [], categories = [], onUpdate, loading
               </Table>
             </TableContainer>
             <TablePagination
-              rowsPerPageOptions={[5, 10, 25, 50, 100]}
+              rowsPerPageOptions={[100, 5, 10, 25, 50, 200]}
               component="div"
               count={filteredTransactions.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
+              labelDisplayedRows={({ from, to, count }) => 
+                showingAllTransactions 
+                  ? `${from}-${to} of ${count}`
+                  : `${from}-${to} of ${count} (showing only first page from API)`
+              }
             />
           </>
         )}
       </CardContent>
+
+      {/* Transaction Detail Modal */}
+      <TransactionDetailModal
+        open={modalOpen}
+        onClose={handleCloseModal}
+        transaction={selectedTransaction}
+      />
     </Card>
   );
 };

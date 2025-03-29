@@ -16,7 +16,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'finance_visualizer.settings')
 django.setup()
 
 # Import models after Django setup
-from transactions.models import Transaction, Category, BankStatement
+from transactions.models import Transaction, Category, BankStatement, BankAccount, Supplier, Account
 
 # Todos: 
 # - Add automatic rolling of files_to_combine_with, now this has to be done manually
@@ -46,24 +46,9 @@ TRIPLETEX_AUTH_TOKEN = os.getenv("3T_SESSION_TOKEN")  # Your session token
 if not TRIPLETEX_AUTH_TOKEN:
     raise ValueError("TRIPLETEX_AUTH_TOKEN environment variable is not set. Please set it before running this script.")
 
-def get_date_list():
-    # Define the start and end dates
-    start_date = datetime.datetime(2023, 2, 1)
-    end_date = datetime.datetime.today()
-
-    # Generate the date range
-    dates = []
-    current_date = start_date
-    while current_date <= end_date:
-        dates.append(current_date.strftime('%m/%d/%Y'))
-        current_date += relativedelta(months=1)
-
-    # Append today's date
-    dates.append(end_date.strftime('%m/%d/%Y'))
-    return dates
 
 def get_details_for_transaction(trans_id):
-    cache_file = os.path.join(get_current_directory(), "transaction_cache.json")
+    cache_file = os.path.join(get_current_directory(), "cache", "transaction_cache.json")
 
     # Check if cache file exists
     if os.path.exists(cache_file):
@@ -72,7 +57,7 @@ def get_details_for_transaction(trans_id):
         if trans_id in cache_data:
             return cache_data[trans_id]
         else:
-            time.sleep(1)
+            time.sleep(0.2)
             print("--not in cache--")
 
     url = "https://tripletex.no/v2/bank/statement/transaction/{}".format(trans_id)
@@ -83,10 +68,6 @@ def get_details_for_transaction(trans_id):
     
     response = requests.request("GET", url, data=payload, auth=auth)
     transaction_data = response.json()
-
-    # Create cache_data dictionary if it doesn't exist
-    if not os.path.exists(cache_file):
-        cache_data = {}
     
     cache_data[trans_id] = transaction_data
 
@@ -95,18 +76,248 @@ def get_details_for_transaction(trans_id):
     
     return transaction_data
 
+def get_supplier_info(supplier_id):
+    """
+    Fetch supplier information from Tripletex API
+    
+    Args:
+        supplier_id: The ID of the supplier in Tripletex
+        
+    Returns:
+        dict: Supplier data from the API
+    """
+    # Check if we have the data cached
+    cache_dir = os.path.join(get_current_directory(), "cache")
+    if not os.path.exists(cache_dir):
+        os.makedirs(cache_dir)
+    
+    cache_file = os.path.join(cache_dir, f"supplier_{supplier_id}.json")
+    
+    # Check if cache file exists and is recent (less than 7 days old)
+    if os.path.exists(cache_file):
+        file_age = datetime.datetime.now() - datetime.datetime.fromtimestamp(os.path.getmtime(cache_file))
+        if file_age.days < 7:  # Cache is valid for 7 days
+            with open(cache_file) as file:
+                try:
+                    supplier_data = json.load(file)
+                    return supplier_data
+                except json.JSONDecodeError:
+                    # If the file is corrupted, fetch fresh data
+                    pass
+    
+    # Fetch from API if not in cache or cache is too old
+    url = f"https://tripletex.no/v2/supplier/{supplier_id}"
+    
+    # Use the correct authentication format
+    auth = HTTPBasicAuth(TRIPLETEX_COMPANY_ID, TRIPLETEX_AUTH_TOKEN)
+    
+    try:
+        response = requests.get(url, auth=auth)
+        response.raise_for_status()  # Raise an exception for 4XX/5XX responses
+        supplier_data = response.json()
+        
+        # Cache the data
+        with open(cache_file, 'w') as file:
+            json.dump(supplier_data, file)
+        
+        return supplier_data
+    except Exception as e:
+        print(f"Error fetching supplier data for ID {supplier_id}: {str(e)}")
+        return None
+
+def get_account_info(account_id):
+    """
+    Fetch account information from Tripletex API
+    
+    Args:
+        account_id: The ID of the ledger account in Tripletex
+        
+    Returns:
+        dict: Account data from the API
+    """
+    # Check if we have the data cached
+    cache_dir = os.path.join(get_current_directory(), "cache")
+    if not os.path.exists(cache_dir):
+        os.makedirs(cache_dir)
+    
+    cache_file = os.path.join(cache_dir, f"account_{account_id}.json")
+    
+    # Check if cache file exists and is recent (less than 7 days old)
+    if os.path.exists(cache_file):
+        file_age = datetime.datetime.now() - datetime.datetime.fromtimestamp(os.path.getmtime(cache_file))
+        if file_age.days < 7:  # Cache is valid for 7 days
+            with open(cache_file) as file:
+                try:
+                    account_data = json.load(file)
+                    return account_data
+                except json.JSONDecodeError:
+                    # If the file is corrupted, fetch fresh data
+                    pass
+    
+    # Fetch from API if not in cache or cache is too old
+    url = f"https://tripletex.no/v2/ledger/account/{account_id}"
+    
+    # Use the correct authentication format
+    auth = HTTPBasicAuth(TRIPLETEX_COMPANY_ID, TRIPLETEX_AUTH_TOKEN)
+    
+    try:
+        response = requests.get(url, auth=auth)
+        response.raise_for_status()  # Raise an exception for 4XX/5XX responses
+        account_data = response.json()
+        
+        # Cache the data
+        with open(cache_file, 'w') as file:
+            json.dump(account_data, file)
+        
+        return account_data
+    except Exception as e:
+        print(f"Error fetching account data for ID {account_id}: {str(e)}")
+        return None
+
+def get_or_create_supplier(supplier_id):
+    """
+    Get or create a Supplier object based on the supplier ID from Tripletex
+    
+    Args:
+        supplier_id: The supplier ID from Tripletex
+        
+    Returns:
+        Supplier: The supplier object, or None if it couldn't be found or created
+    """
+    if not supplier_id:
+        return None
+    
+    # First try to find an existing supplier
+    try:
+        supplier = Supplier.objects.get(tripletex_id=str(supplier_id))
+        return supplier
+    except Supplier.DoesNotExist:
+        # If not found, fetch data from Tripletex API
+        supplier_data = get_supplier_info(supplier_id)
+        
+        if supplier_data and 'value' in supplier_data:
+            value = supplier_data['value']
+            
+            # Handle deliveryAddress which may be None
+            address = ""
+            if value.get('deliveryAddress') and isinstance(value.get('deliveryAddress'), dict):
+                address = value.get('deliveryAddress', {}).get('addressLine1', '')
+            
+            # Create a new supplier
+            supplier = Supplier.objects.create(
+                tripletex_id=str(supplier_id),
+                name=value.get('name', ''),
+                organization_number=value.get('organizationNumber', ''),
+                email=value.get('email', ''),
+                phone_number=value.get('phoneNumber', ''),
+                address=address,
+                url=value.get('url', '')
+            )
+            print(f"Created new supplier: {supplier.name} (ID: {supplier_id})")
+            return supplier
+        
+        return None
+
+def get_or_create_account(account_id):
+    """
+    Get or create an Account object based on the account ID from Tripletex
+    
+    Args:
+        account_id: The account ID from Tripletex
+        
+    Returns:
+        Account: The account object, or None if it couldn't be found or created
+    """
+    if not account_id:
+        return None
+    
+    # First try to find an existing account
+    try:
+        account = Account.objects.get(tripletex_id=str(account_id))
+        return account
+    except Account.DoesNotExist:
+        # If not found, fetch data from Tripletex API
+        account_data = get_account_info(account_id)
+        
+        if account_data and 'value' in account_data:
+            value = account_data['value']
+            
+            # Create a new account
+            account = Account.objects.create(
+                tripletex_id=str(account_id),
+                account_number=value.get('number', ''),
+                name=value.get('name', ''),
+                description=value.get('description', ''),
+                account_type=value.get('type', ''),
+                url=value.get('url', ''),
+                is_active=value.get('active', True)
+            )
+            print(f"Created new account: {account.name} (ID: {account_id})")
+            return account
+        
+        return None
 
 def convert_bank_id_to_string(bank_id):
+    """
+    Convert a bank ID to its corresponding name from bank_account_map.json
+    
+    Args:
+        bank_id: The bank account ID to look up
+        
+    Returns:
+        str: The bank account name, or "Unknown" if not found
+    """
     with open(os.path.join(get_current_directory(), 'bank_account_map.json')) as file:
         bank_account_map = json.load(file)
+    
+    # Convert bank_id to string for comparison
+    bank_id_str = str(bank_id)
+    
     for account in bank_account_map:
-        if account["bank_id"] == bank_id:
+        if str(account["bank_id"]) == bank_id_str:
             return account["bank_name"]
+    
     return "Unknown"
 
-def get_all_bank_statements(force_refresh=False, cache_days=1):
+def get_bank_account_by_id(bank_id):
     """
-    Fetch all bank statements from Tripletex using pagination to handle the 1000 transaction limit
+    Get or create a BankAccount object based on the bank ID
+    
+    Args:
+        bank_id: The bank account ID
+        
+    Returns:
+        BankAccount: The bank account object, or None if it couldn't be found or created
+    """
+    # Convert bank_id to string
+    bank_id_str = str(bank_id)
+    
+    try:
+        # First try to find an existing bank account
+        bank_account = BankAccount.objects.get(account_number=bank_id_str)
+        return bank_account
+    except BankAccount.DoesNotExist:
+        # If not found, try to get the name from bank_account_map.json
+        bank_name = convert_bank_id_to_string(bank_id)
+        
+        if bank_name != "Unknown":
+            # Create a new bank account
+            bank_account = BankAccount.objects.create(
+                name=bank_name,
+                account_number=bank_id_str,
+                bank_name="Bank",
+                account_type="Checking",
+                is_active=True
+            )
+            print("Created new bank account: {} (ID: {})".format(bank_name, bank_id))
+            return bank_account
+    
+    return None
+
+def get_all_bank_statements(force_refresh=False, cache_days=30):
+    """
+    Fetch all bank statements from Tripletex using pagination to handle the 1000 transaction limit.
+    Only uses cache if it contains at least 1000 transactions.
     
     Args:
         force_refresh (bool): If True, ignore cache and fetch fresh data
@@ -141,38 +352,43 @@ def get_all_bank_statements(force_refresh=False, cache_days=1):
     print("Fetching bank statements from Tripletex...")
     print(f"Using company ID: {TRIPLETEX_COMPANY_ID}")
     
-    # Loop until we've fetched all statements
+    # Get today's date and the cutoff date for latest statements
+    today = datetime.datetime.now()
+    latest_cutoff = today - datetime.timedelta(days=7)  # Consider last 7 days as "latest"
+    
     while has_more:
         print(f"Fetching statements {from_index} to {from_index + count}...")
         
-        # Add pagination parameters
         params = {
             'from': from_index,
             'count': count
         }
         
-        # Create a cache key based on the request parameters
         cache_key = f"bank_statements_{from_index}_{count}.json"
         cache_file = os.path.join(cache_dir, cache_key)
         
-        # Check if we can use cached data for this request
+        # Check if we should use cached data
         use_cache = False
         if not force_refresh and os.path.exists(cache_file):
-            # Check if cache is still valid
-            cache_timestamp = os.path.getmtime(cache_file)
-            cache_datetime = datetime.datetime.fromtimestamp(cache_timestamp)
-            cache_age = datetime.datetime.now() - cache_datetime
-            
-            if cache_age.days < cache_days:
-                print(f"Using cached data for range {from_index}-{from_index+count} (age: {cache_age.seconds // 3600} hours, {(cache_age.seconds % 3600) // 60} minutes)")
-                try:
-                    with open(cache_file, 'r') as file:
-                        data = json.load(file)
-                    use_cache = True
-                except Exception as e:
-                    print(f"Error reading cache file: {str(e)}. Will fetch fresh data.")
-            else:
-                print(f"Cache for range {from_index}-{from_index+count} is {cache_age.days} days old. Fetching fresh data...")
+            try:
+                with open(cache_file, 'r') as file:
+                    cached_data = json.load(file)
+                    # Only use cache if it contains at least 1000 transactions
+                    if cached_data.get("values") and len(cached_data["values"]) >= 1000:
+                        cache_timestamp = os.path.getmtime(cache_file)
+                        cache_datetime = datetime.datetime.fromtimestamp(cache_timestamp)
+                        cache_age = datetime.datetime.now() - cache_datetime
+                        
+                        if cache_age.days < cache_days:
+                            print(f"Using cached data for range {from_index}-{from_index+count} (age: {cache_age.seconds // 3600} hours)")
+                            data = cached_data
+                            use_cache = True
+                        else:
+                            print(f"Cache for range {from_index}-{from_index+count} is too old. Fetching fresh data...")
+                    else:
+                        print(f"Cache contains less than 1000 transactions. Fetching fresh data...")
+            except Exception as e:
+                print(f"Error reading cache file: {str(e)}. Will fetch fresh data.")
         
         if not use_cache:
             # Make the API request
@@ -190,16 +406,18 @@ def get_all_bank_statements(force_refresh=False, cache_days=1):
                 print(response.text)
                 break
             
-            # Parse the response
             data = response.json()
             
-            # Save to cache file
-            try:
-                with open(cache_file, 'w') as file:
-                    json.dump(data, file)
-                print(f"Cached data for range {from_index}-{from_index+count}")
-            except Exception as e:
-                print(f"Error saving cache file: {str(e)}")
+            # Only cache if we got at least 1000 transactions
+            if len(data.get("values", [])) >= 1000:
+                try:
+                    with open(cache_file, 'w') as file:
+                        json.dump(data, file)
+                    print(f"Cached data for range {from_index}-{from_index+count}")
+                except Exception as e:
+                    print(f"Error saving cache file: {str(e)}")
+            else:
+                print(f"Not caching data with less than 1000 transactions from range {from_index}-{from_index+count}")
         
         # Add the values to our list
         statements = data.get("values", [])
@@ -268,9 +486,44 @@ def save_transactions_to_database(data):
                 
             processed_data = transaction["processed_data"]
             
+            # Get the bank account for this transaction
+            account_id = processed_data.get("account_id")
+            bank_account = None
+            
+            if account_id:
+                # Try to get an existing bank account
+                bank_account = get_bank_account_by_id(account_id)
+            
             # Check if this transaction already exists in the database
             tripletex_id = str(transaction["id"])
             existing_transaction = None
+            
+            # Initialize supplier and ledger_account as None
+            supplier = None
+            ledger_account = None
+            
+            # If transaction has detailed_data and matchType is ONE_TRANSACTION_TO_ONE_POSTING,
+            # extract supplier and account information
+            if "detailed_data" in transaction and "value" in transaction["detailed_data"]:
+                detailed_data = transaction["detailed_data"]["value"]
+                
+                if detailed_data.get("matchType") == "ONE_TRANSACTION_TO_ONE_POSTING":
+                    # Process grouped postings to extract supplier and account data
+                    grouped_postings = detailed_data.get("groupedPostings", [])
+                    
+                    if grouped_postings and len(grouped_postings) > 0:
+                        # Use the first posting as the source of supplier and account info
+                        first_posting = grouped_postings[0]
+                        
+                        # Get supplier data if available
+                        if first_posting.get("supplier") and first_posting["supplier"].get("id"):
+                            supplier_id = first_posting["supplier"]["id"]
+                            supplier = get_or_create_supplier(supplier_id)
+                        
+                        # Get account data if available
+                        if first_posting.get("account") and first_posting["account"].get("id"):
+                            account_id = first_posting["account"]["id"]
+                            ledger_account = get_or_create_account(account_id)
             
             try:
                 existing_transaction = Transaction.objects.get(tripletex_id=tripletex_id)
@@ -278,13 +531,40 @@ def save_transactions_to_database(data):
                 existing_transaction.description = processed_data.get("description", "")
                 existing_transaction.amount = processed_data.get("amount", 0)
                 existing_transaction.date = datetime.datetime.strptime(statement.get("fromDate"), "%Y-%m-%d")
-                existing_transaction.bank_account_id = processed_data.get("bank_account_name", "Unknown")
+                existing_transaction.legacy_bank_account_id = processed_data.get("bank_account_name", "Unknown")
                 existing_transaction.account_id = processed_data.get("account_id")
                 existing_transaction.is_internal_transfer = processed_data.get("is_internal_transfer", False)
                 existing_transaction.is_wage_transfer = processed_data.get("is_wage_transfer", False)
                 existing_transaction.is_tax_transfer = processed_data.get("is_tax_transfer", False)
                 existing_transaction.is_forbidden = processed_data.get("is_forbidden", False)
                 existing_transaction.should_process = processed_data.get("should_process", False)
+                
+                # Set bank account if we have one
+                if bank_account:
+                    existing_transaction.bank_account = bank_account
+                
+                # Set supplier and ledger_account if available
+                if supplier:
+                    existing_transaction.supplier = supplier
+                
+                if ledger_account:
+                    existing_transaction.ledger_account = ledger_account
+                
+                # Store complete transaction data as JSON
+                raw_data = {
+                    "transaction": transaction,
+                    "detailed_data": transaction.get("detailed_data", {}),
+                    "processed_data": processed_data,
+                    "statement": {
+                        "id": statement.get("id"),
+                        "number": statement.get("number"),
+                        "fromDate": statement.get("fromDate"),
+                        "toDate": statement.get("toDate"),
+                        "description": statement.get("description"),
+                        "amount": statement.get("amount")
+                    }
+                }
+                existing_transaction.raw_data = raw_data
                 
                 # Don't update category if it was already set to something other than the default
                 if existing_transaction.category_id is None:
@@ -295,19 +575,38 @@ def save_transactions_to_database(data):
                 print(f"Transaction with tripletex_id {tripletex_id} updated.")
             except Transaction.DoesNotExist:
                 # Create a new transaction
+                # Store complete transaction data as JSON
+                raw_data = {
+                    "transaction": transaction,
+                    "detailed_data": transaction.get("detailed_data", {}),
+                    "processed_data": processed_data,
+                    "statement": {
+                        "id": statement.get("id"),
+                        "number": statement.get("number"),
+                        "fromDate": statement.get("fromDate"),
+                        "toDate": statement.get("toDate"),
+                        "description": statement.get("description"),
+                        "amount": statement.get("amount")
+                    }
+                }
+                
                 new_transaction = Transaction(
                     tripletex_id=tripletex_id,
                     description=processed_data.get("description", ""),
                     amount=processed_data.get("amount", 0),
                     date=datetime.datetime.strptime(statement.get("fromDate"), "%Y-%m-%d"),
-                    bank_account_id=processed_data.get("bank_account_name", "Unknown"),
+                    legacy_bank_account_id=processed_data.get("bank_account_name", "Unknown"),
                     account_id=processed_data.get("account_id"),
                     is_internal_transfer=processed_data.get("is_internal_transfer", False),
                     is_wage_transfer=processed_data.get("is_wage_transfer", False),
                     is_tax_transfer=processed_data.get("is_tax_transfer", False),
                     is_forbidden=processed_data.get("is_forbidden", False),
                     should_process=processed_data.get("should_process", False),
-                    category=default_category
+                    category=default_category,
+                    raw_data=raw_data,
+                    bank_account=bank_account,  # Set the bank account
+                    supplier=supplier,  # Set the supplier
+                    ledger_account=ledger_account  # Set the ledger account
                 )
                 new_transaction.save()
                 transactions_saved += 1
@@ -381,7 +680,19 @@ if __name__ == "__main__":
             transaction_posting = transaction_data["value"]["groupedPostings"]
     
             forbidden_desc = any(forbidden_key in transaction_description.lower() for forbidden_key in forbidden_descriptions) 
-            internal_transfer = any(posting["description"] == "Intern overføring" for posting in transaction_posting)
+            
+            # Enhanced check for internal transfers - check both postings and description
+            internal_transfer = (
+                any(posting["description"] == "Intern overføring" for posting in transaction_posting) or
+                "OPPGAVE Fra: Aviant AS" in transaction_description or
+                "OVERFØRT Fra: AVIANT AS" in transaction_description or
+                "Overføring mellom egne kontoer" in transaction_description or
+                "Overføring til egen konto" in transaction_description or
+                "Overføring fra egen konto" in transaction_description or
+                "OPPGAVE KontoreguleringAviant AS" in transaction_description or
+                "OPPGAVE Til: 4213.42.39535Aviant AS" in transaction_description
+            )
+            
             wage_transfer = any(posting["postingMatchType"] == "WAGE" for posting in transaction_posting)
             tax_transfer = any(posting["postingMatchType"] == "TAX" for posting in transaction_posting)
             

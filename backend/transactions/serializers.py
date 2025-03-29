@@ -26,7 +26,7 @@ class TransactionSerializer(serializers.ModelSerializer):
         fields = ['id', 'tripletex_id', 'description', 'amount', 'date', 
                  'bank_account_id', 'account_id', 'is_internal_transfer', 'is_wage_transfer', 
                  'is_tax_transfer', 'is_forbidden', 'should_process',
-                 'category', 'category_name', 'imported_at', 'updated_at']
+                 'category', 'category_name', 'raw_data', 'imported_at', 'updated_at']
 
     def get_category_name(self, obj):
         if obj.category:

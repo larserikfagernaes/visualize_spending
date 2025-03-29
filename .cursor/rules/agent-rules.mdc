@@ -1,0 +1,11 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Your rule content
+
+The python uses python3 and a virtual environment located at backend/venv. Always activate this before running a python command, and always run python commands with python3. 
+The bakcend server is always running on https://localhost:8000 and you don't have to rerun it. When debugging, simply connect to the server address. 
+The frontend is always running at https://localhost:3000 and you don't have to rerun it. When debugging, simply send a request to it.  

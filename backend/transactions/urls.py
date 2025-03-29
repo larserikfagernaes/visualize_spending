@@ -1,15 +1,30 @@
+"""
+URL patterns for the transactions app.
+"""
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from . import views
+from .api.views import (
+    TransactionViewSet,
+    CategoryViewSet,
+    BankStatementViewSet,
+    BankAccountViewSet,
+    import_from_tripletex,
+    analyze_transfers
+)
 
+# Create a router and register our viewsets with it
 router = DefaultRouter()
-router.register(r'transactions', views.TransactionViewSet)
-router.register(r'bank-statements', views.BankStatementViewSet)
-router.register(r'categories', views.CategoryViewSet)
+router.register(r'transactions', TransactionViewSet)
+router.register(r'categories', CategoryViewSet)
+router.register(r'bank-statements', BankStatementViewSet)
+router.register(r'bank-accounts', BankAccountViewSet)
 
+# The API URLs are now determined automatically by the router
 urlpatterns = [
+    # Include the router URLs
     path('', include(router.urls)),
-    path('import/', views.import_transactions, name='import-transactions'),
-    path('import-tripletex/', views.import_from_tripletex, name='import-from-tripletex'),
-    path('categorize/<int:transaction_id>/', views.categorize_transaction, name='categorize-transaction'),
+    
+    # Import and analysis endpoints
+    path('import-tripletex/', import_from_tripletex, name='import-from-tripletex'),
+    path('analyze-transfers/', analyze_transfers, name='analyze-transfers'),
 ] 

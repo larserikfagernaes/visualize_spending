@@ -20,7 +20,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8000/api';
+const API_URL = 'http://localhost:8000/api/v1';
 
 const CategoryManager = ({ categories = [], onUpdate }) => {
   const [newCategory, setNewCategory] = useState({ name: '', description: '' });
