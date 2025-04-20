@@ -18,18 +18,18 @@ export const getBankAccountName = (bankAccountId, bankAccounts) => {
   }
   
   if (!bankAccounts || !Array.isArray(bankAccounts) || bankAccounts.length === 0) {
-    // Format numeric IDs as "Bank Account X" but leave special IDs as-is
-    return isSpecialId ? bankAccountId : `Bank Account ${bankAccountId}`;
+    // Just return the ID as is instead of creating "Bank Account X" names
+    return bankAccountId.toString();
   }
   
   const bankAccount = bankAccounts.find(account => 
     account.id === bankAccountId || account.id === parseInt(bankAccountId)
   );
   
-  // If we found the account, use its name, otherwise format based on ID type
+  // If we found the account, use its name, otherwise use the ID directly
   return bankAccount && bankAccount.name 
     ? bankAccount.name 
-    : (isSpecialId ? bankAccountId : `Bank Account ${bankAccountId}`);
+    : (isSpecialId ? bankAccountId : bankAccountId.toString());
 };
 
 /**

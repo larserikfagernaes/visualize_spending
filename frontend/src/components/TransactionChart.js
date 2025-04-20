@@ -12,7 +12,9 @@ import {
   ToggleButton, 
   FormControlLabel, 
   Switch,
-  Divider
+  Divider,
+  Chip,
+  InputLabel
 } from '@mui/material';
 import {
   Chart as ChartJS,
@@ -63,11 +65,14 @@ const TransactionChart = ({ data, transactions = [], bankAccounts = [] }) => {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [chartType, setChartType] = useState('stacked');
   const [showNegativeOnly, setShowNegativeOnly] = useState(false);
+  // Add state for related accounts filter
+  const [selectedRelatedAccount, setSelectedRelatedAccount] = useState('all');
   
   // Create memoized mapping of bank account IDs to names
   const bankAccountNameMap = useMemo(() => {
     // Create a fresh mapping object
     const mapping = {};
+    console.log("--bankAccounts", bankAccounts);
     
     // First, add all bank accounts from the bankAccounts array
     if (bankAccounts && bankAccounts.length > 0) {
@@ -93,7 +98,7 @@ const TransactionChart = ({ data, transactions = [], bankAccounts = [] }) => {
         if (mapping[id] === undefined) {
           // Special handling for string IDs that are not numeric (like "SP-Tech")
           const isSpecialId = typeof id === 'string' && isNaN(parseInt(id));
-          mapping[id] = isSpecialId ? id : `Bank Account ${id}`;
+          mapping[id] = isSpecialId ? id : id.toString();
         }
       });
     }
@@ -104,7 +109,7 @@ const TransactionChart = ({ data, transactions = [], bankAccounts = [] }) => {
         if (mapping[id] === undefined) {
           // Special handling for string IDs that are not numeric (like "SP-Tech")
           const isSpecialId = typeof id === 'string' && isNaN(parseInt(id));
-          mapping[id] = isSpecialId ? id : `Bank Account ${id}`;
+          mapping[id] = isSpecialId ? id : id.toString();
         }
       });
     }
@@ -116,6 +121,44 @@ const TransactionChart = ({ data, transactions = [], bankAccounts = [] }) => {
   // Debug bank accounts data
   console.log('TransactionChart received bankAccounts:', bankAccounts.map(acc => ({ id: acc.id, name: acc.name })));
   
+  // Create memoized mapping of related accounts
+  const relatedAccountsMap = useMemo(() => {
+    if (!transactions || transactions.length === 0) return {};
+    
+    const relatedAccountsSet = new Set();
+    
+    // Collect all unique related accounts from transactions
+    transactions.forEach(transaction => {
+      if (transaction.related_accounts && transaction.related_accounts.length > 0) {
+        transaction.related_accounts.forEach(account => {
+          if (account.name) {
+            relatedAccountsSet.add(account.name);
+          }
+        });
+      }
+    });
+    
+    // Convert set to object mapping for consistency with other data structures
+    const mapping = {};
+    relatedAccountsSet.forEach(account => {
+      mapping[account] = account;
+    });
+    
+    console.log("Related accounts mapping:", mapping);
+    return mapping;
+  }, [transactions]);
+  
+  // Force complete chart reinitialization when relevant data changes
+  const chartKey = useMemo(() => 
+    JSON.stringify({
+      accounts: Object.entries(bankAccountNameMap).map(([id, name]) => `${id}:${name}`),
+      year: selectedYear,
+      type: chartType,
+      relatedAccount: selectedRelatedAccount
+    }),
+    [bankAccountNameMap, selectedYear, chartType, selectedRelatedAccount]
+  );
+  
   // Handle year change - moved to top level before any returns
   const handleYearChange = useCallback((event) => {
     setSelectedYear(event.target.value);
@@ -126,6 +169,11 @@ const TransactionChart = ({ data, transactions = [], bankAccounts = [] }) => {
     if (newType !== null) {
       setChartType(newType);
     }
+  }, []);
+  
+  // Handle related account change
+  const handleRelatedAccountChange = useCallback((event) => {
+    setSelectedRelatedAccount(event.target.value);
   }, []);
   
   // ===== Monthly Bank Account Chart =====
@@ -153,8 +201,9 @@ const TransactionChart = ({ data, transactions = [], bankAccounts = [] }) => {
       return null;
     }
     
-    // Debug log for bank accounts
+    // Debug log for bank accounts and name mapping
     console.log('Bank accounts available:', bankAccounts);
+    console.log('Bank account name mapping:', bankAccountNameMap);
     
     // Filter transactions for the selected year
     const filteredTransactions = transactions.filter(transaction => {
@@ -173,72 +222,104 @@ const TransactionChart = ({ data, transactions = [], bankAccounts = [] }) => {
       return null;
     }
     
+    // Apply related account filter if not 'all'
+    let relatedFilteredTransactions = filteredTransactions;
+    if (selectedRelatedAccount !== 'all') {
+      relatedFilteredTransactions = filteredTransactions.filter(t => 
+        t.related_accounts && t.related_accounts.some(account => account.name === selectedRelatedAccount)
+      );
+      
+      // If no transactions match the related account filter, return null
+      if (relatedFilteredTransactions.length === 0) {
+        return null;
+      }
+    }
+    
     // Filter further if showNegativeOnly is enabled
     const finalFilteredTransactions = showNegativeOnly
-      ? filteredTransactions.filter(t => t.amount < 0)
-      : filteredTransactions;
+      ? relatedFilteredTransactions.filter(t => t.amount < 0)
+      : relatedFilteredTransactions;
+    
+    // First collect all unique bank account IDs and map to display names
+    const bankAccountsUsed = new Map(); // Map of ID -> display name
+    
+    finalFilteredTransactions.forEach(transaction => {
+      if (transaction.bank_account_id) {
+        const id = transaction.bank_account_id;
+        // Get display name - look up in our name mapping or use ID as fallback
+        const displayName = bankAccountNameMap[id] || id.toString();
+        bankAccountsUsed.set(id, transaction.bank_account_name);
+      }
+    });
+    
+    console.log('Bank accounts used in transactions:', 
+      Array.from(bankAccountsUsed.entries()).map(([id, name]) => `${id} -> ${name}`));
     
     // Group by month and bank account
     const monthlyData = {};
-    const bankAccountsUsed = new Map(); // Use Map to maintain insertion order and store both ID and name
     
     // Initialize all months to ensure we have data for each month
     MONTHS.forEach((_, index) => {
       monthlyData[index] = {};
+      
+      // Pre-initialize each bank account to 0 for every month
+      bankAccountsUsed.forEach((name) => {
+        monthlyData[index][name] = 0;
+      });
     });
     
     // Process each transaction
     finalFilteredTransactions.forEach(transaction => {
-      const date = new Date(transaction.date);
-      const month = date.getMonth(); // 0-11
-      const bankAccountId = transaction.bank_account_id || 'Unknown';
-      
-      // Use the proper name from the bank account mapping
-      const bankAccountName = bankAccountNameMap[bankAccountId] || bankAccountId;
-      
-      // Store both ID and display name
-      bankAccountsUsed.set(bankAccountId, bankAccountName);
-      
-      const amount = parseFloat(transaction.amount);
-      
-      // Skip if amount is NaN
-      if (isNaN(amount)) return;
-      
-      // Initialize bank account in monthly data if needed
-      if (!monthlyData[month][bankAccountName]) {
-        monthlyData[month][bankAccountName] = 0;
+      try {
+        const date = new Date(transaction.date);
+        const month = date.getMonth(); // 0-11
+        const bankAccountId = transaction.bank_account_id || 'Unknown';
+        
+        // Get the name from our mapping for consistent naming
+        const bankAccountName = bankAccountsUsed.get(bankAccountId) || 'Unknown';
+        
+        const amount = parseFloat(transaction.amount);
+        
+        // Skip if amount is NaN
+        if (isNaN(amount)) return;
+        
+        // Add amount
+        if (monthlyData[month][bankAccountName] === undefined) {
+          monthlyData[month][bankAccountName] = 0;
+        }
+        
+        monthlyData[month][bankAccountName] += amount;
+      } catch (err) {
+        console.error('Error processing transaction for monthly chart:', err);
       }
-      
-      // Add amount
-      monthlyData[month][bankAccountName] += amount;
     });
     
-    // Log the used bank accounts to verify they're correct
-    console.log('Bank accounts used in monthly chart:', Object.fromEntries(bankAccountsUsed));
-    
-    // Convert Map to array of bank account names
+    // Convert bank account names to an array and ensure consistent ordering
     const bankAccountNames = Array.from(bankAccountsUsed.values());
+    console.log('Bank account names for chart:', bankAccountNames);
     
-    // Prepare data for chart
+    // Generate colors for each bank account - match color scheme with other charts
+    const colors = generateColors(bankAccountNames.length);
+    
+    // Prepare data for chart with proper naming
     const datasets = bankAccountNames.map((bankName, index) => {
-      const color = generateColors(bankAccountNames.length)[index];
-      
       return {
-        label: bankName,
+        label: bankName, // Bank account name for legend
         data: MONTHS.map((_, monthIndex) => 
           Math.abs(monthlyData[monthIndex][bankName] || 0)
         ),
-        backgroundColor: color,
-        // Use negative for expenses for stacked view
+        backgroundColor: colors[index],
         stack: chartType === 'stacked' ? 'stack1' : bankName,
       };
     });
+    
+    console.log('Monthly chart datasets:', datasets.map(ds => `${ds.label}`));
     
     return {
       labels: MONTHS,
       datasets
     };
-  }, [transactions, selectedYear, chartType, showNegativeOnly, bankAccounts, bankAccountNameMap]);
+  }, [transactions, selectedYear, chartType, showNegativeOnly, bankAccounts, bankAccountNameMap, selectedRelatedAccount]);
   
   // Prepare data for category pie chart and bar chart
   const categoryData = useMemo(() => {
@@ -339,6 +420,7 @@ const TransactionChart = ({ data, transactions = [], bankAccounts = [] }) => {
     
     if (!hasBankAccounts) return null;
     
+    console.log("--data", data);
     const bankAccountData = data.bank_accounts;
     const accountIds = Object.keys(bankAccountData);
     
@@ -386,6 +468,47 @@ const TransactionChart = ({ data, transactions = [], bankAccounts = [] }) => {
       ],
     };
   }, [data, bankAccountNameMap]);
+
+  // Prepare data for related accounts bar chart
+  const relatedAccountBarData = useMemo(() => {
+    if (!data || !data.related_accounts) return null;
+    
+    const relatedAccountData = data.related_accounts;
+    const accountNames = Object.keys(relatedAccountData);
+    
+    // Filter out any accounts with invalid totals
+    const validAccountNames = accountNames.filter(name => {
+      const total = relatedAccountData[name]?.total;
+      return total !== undefined && total !== null && !isNaN(parseFloat(total));
+    });
+    
+    if (validAccountNames.length === 0) return null;
+    
+    // Create a sorted array of accounts
+    const sortedAccounts = validAccountNames
+      .map(name => ({
+        name,
+        total: Math.abs(parseFloat(relatedAccountData[name].total))
+      }))
+      .sort((a, b) => b.total - a.total)
+      .slice(0, 10); // Limit to top 10 related accounts
+    
+    const accountLabels = sortedAccounts.map(account => account.name);
+    const accountTotals = sortedAccounts.map(account => account.total);
+    const colors = generateColors(sortedAccounts.length);
+    
+    return {
+      labels: accountLabels,
+      datasets: [
+        {
+          label: 'Amount',
+          data: accountTotals,
+          backgroundColor: colors,
+          borderWidth: 1,
+        },
+      ],
+    };
+  }, [data]);
 
   if (!data) return null;
   
@@ -439,6 +562,17 @@ const TransactionChart = ({ data, transactions = [], bankAccounts = [] }) => {
     },
   };
   
+  const relatedAccountOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      title: {
+        display: true,
+        text: 'Spending by Related Account',
+      },
+    },
+  };
+  
   // Monthly bank chart options
   const monthlyBankOptions = {
     responsive: true,
@@ -455,6 +589,30 @@ const TransactionChart = ({ data, transactions = [], bankAccounts = [] }) => {
     plugins: {
       legend: {
         position: 'top',
+        labels: {
+          // Force the legend to use the dataset label directly
+          generateLabels: function(chart) {
+            const data = chart.data;
+            if (data.datasets.length) {
+              return data.datasets.map((dataset, i) => {
+                return {
+                  text: dataset.label,
+                  fillStyle: dataset.backgroundColor,
+                  hidden: !chart.isDatasetVisible(i),
+                  lineCap: 'butt',
+                  lineDash: [],
+                  lineDashOffset: 0,
+                  lineJoin: 'miter',
+                  lineWidth: 1,
+                  strokeStyle: dataset.backgroundColor,
+                  pointStyle: 'circle',
+                  datasetIndex: i
+                };
+              });
+            }
+            return [];
+          }
+        }
       },
       title: {
         display: true,
@@ -463,6 +621,7 @@ const TransactionChart = ({ data, transactions = [], bankAccounts = [] }) => {
       tooltip: {
         callbacks: {
           label: function(context) {
+            // Force the tooltip to use the dataset label directly
             let label = context.dataset.label || '';
             if (label) {
               label += ': ';
@@ -511,12 +670,23 @@ const TransactionChart = ({ data, transactions = [], bankAccounts = [] }) => {
           )}
           
           {bankAccountBarData && (
-            <Grid item xs={12}>
+            <Grid item xs={12} md={6}>
               <Typography variant="subtitle1" gutterBottom align="center">
                 Spending by Bank Account
               </Typography>
               <Box sx={{ height: 300, mb: 4 }}>
                 <Bar data={bankAccountBarData} options={bankAccountOptions} />
+              </Box>
+            </Grid>
+          )}
+          
+          {relatedAccountBarData && (
+            <Grid item xs={12} md={6}>
+              <Typography variant="subtitle1" gutterBottom align="center">
+                Top 10 Related Accounts
+              </Typography>
+              <Box sx={{ height: 300, mb: 4 }}>
+                <Bar data={relatedAccountBarData} options={relatedAccountOptions} />
               </Box>
             </Grid>
           )}
@@ -555,6 +725,23 @@ const TransactionChart = ({ data, transactions = [], bankAccounts = [] }) => {
                   </Select>
                 </FormControl>
                 
+                <FormControl size="small" sx={{ minWidth: 150 }}>
+                  <InputLabel id="related-account-select-label">Related Account</InputLabel>
+                  <Select
+                    labelId="related-account-select-label"
+                    value={selectedRelatedAccount}
+                    onChange={handleRelatedAccountChange}
+                    label="Related Account"
+                  >
+                    <MenuItem value="all">All Accounts</MenuItem>
+                    {Object.keys(relatedAccountsMap).map(account => (
+                      <MenuItem key={account} value={account}>
+                        {account}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                
                 <ToggleButtonGroup
                   value={chartType}
                   exclusive
@@ -584,15 +771,19 @@ const TransactionChart = ({ data, transactions = [], bankAccounts = [] }) => {
             
             {monthlyBankData ? (
               <Box sx={{ height: 400 }}>
-                <Bar data={monthlyBankData} options={monthlyBankOptions} />
+                <Bar 
+                  data={monthlyBankData} 
+                  options={monthlyBankOptions}
+                  key={chartKey} // Dynamic key based on all relevant data
+                />
               </Box>
             ) : (
               <>
                 <Typography variant="body2" color="text.secondary" align="center" sx={{ py: 5 }}>
-                  No data available for the selected year
+                  No data available for the selected filters
                 </Typography>
                 <Typography variant="caption" color="text.secondary" align="center" display="block">
-                  Try selecting a different year or check that transactions have been imported.
+                  Try selecting a different year or related account, or check that transactions have been imported.
                 </Typography>
               </>
             )}

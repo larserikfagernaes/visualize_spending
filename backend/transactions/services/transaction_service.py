@@ -147,11 +147,36 @@ def get_transaction_summary(filters=None):
             'percentage': round((float(item['total'] or 0) / float(total_amount)) * 100, 2) if total_amount else 0
         }
     
+    # Get related accounts breakdown
+    related_accounts = {}
+    for transaction in transactions.prefetch_related('transaction_accounts__account'):
+        for ta in transaction.transaction_accounts.all():
+            if ta.account:
+                account_name = ta.account.name or ta.account.account_number or f"Account {ta.account.id}"
+                amount = float(ta.amount) if ta.amount else float(transaction.amount)
+                
+                if account_name not in related_accounts:
+                    related_accounts[account_name] = {
+                        'total': 0,
+                        'count': 0,
+                        'percentage': 0
+                    }
+                
+                related_accounts[account_name]['total'] += abs(amount)
+                related_accounts[account_name]['count'] += 1
+    
+    # Calculate percentages for related accounts
+    total_related_amount = sum(acc['total'] for acc in related_accounts.values())
+    for account_name, data in related_accounts.items():
+        if total_related_amount > 0:
+            data['percentage'] = round((data['total'] / total_related_amount) * 100, 2)
+    
     return {
         'total_transactions': total_transactions,
         'total_amount': float(total_amount),
         'categories': categories,
-        'bank_accounts': bank_accounts
+        'bank_accounts': bank_accounts,
+        'related_accounts': related_accounts
     }
 
 def update_transaction_category(transaction_id, category_id):

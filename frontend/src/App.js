@@ -15,6 +15,7 @@ import ImportTransactions from './components/ImportTransactions';
 import TransactionListTest from './tests/TransactionListTest';
 import ApiTest from './components/ApiTest';
 import ApiTestDashboard from './components/ApiTestDashboard';
+import TransactionTreeMap from './components/TransactionTreeMap';
 
 // API URL - using the same endpoint as in services/api.js
 const API_URL = 'http://localhost:8000/api/v1';
@@ -450,18 +451,22 @@ function App() {
 
   // Fetch categories
   const fetchCategories = async () => {
-    // Use the same request config for consistency
-    const requestConfig = {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Basic ${authCredentials}`
-      },
-      withCredentials: true
-    };
-    
     try {
-      const response = await axios.get(`${API_URL}/categories/`, requestConfig);
-      setCategories(Array.isArray(response.data) ? response.data : []);
+      console.log('Fetching categories...');
+      const response = await axios.get(`${API_URL}/categories/`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Basic ${authCredentials}`
+        },
+        withCredentials: true
+      });
+      if (response.data && Array.isArray(response.data.results)) {
+        console.log(`Successfully fetched ${response.data.results.length} categories`);
+        setCategories(response.data.results);
+      } else {
+        console.error('Invalid categories data format:', response.data);
+        setCategories([]);
+      }
     } catch (error) {
       console.error('Error fetching categories:', error);
       setCategories([]);
@@ -506,7 +511,7 @@ function App() {
             const isSpecialId = typeof id === 'string' && isNaN(parseInt(id));
             return {
               id: id,
-              name: isSpecialId ? id : `Bank Account ${id}`,
+              name: isSpecialId ? id : id.toString(),
               account_number: `${id}`,
               bank_name: 'Bank',
               account_type: 'Checking',
@@ -526,7 +531,7 @@ function App() {
               const isSpecialId = typeof id === 'string' && isNaN(parseInt(id));
               mockBankAccounts.push({
                 id: id,
-                name: isSpecialId ? id : `Bank Account ${id}`,
+                name: isSpecialId ? id : id.toString(),
                 account_number: `${id}`,
                 bank_name: 'Bank',
                 account_type: 'Checking',
@@ -562,7 +567,7 @@ function App() {
           const isSpecialId = typeof id === 'string' && isNaN(parseInt(id));
           mockBankAccounts.push({
             id: id,
-            name: isSpecialId ? id : `Bank Account ${id}`,
+            name: isSpecialId ? id : id.toString(),
             account_number: `${id}`,
             bank_name: 'Bank',
             account_type: 'Checking',
@@ -582,7 +587,7 @@ function App() {
             const isSpecialId = typeof id === 'string' && isNaN(parseInt(id));
             mockBankAccounts.push({
               id: id,
-              name: isSpecialId ? id : `Bank Account ${id}`,
+              name: isSpecialId ? id : id.toString(),
               account_number: `${id}`,
               bank_name: 'Bank',
               account_type: 'Checking',
@@ -681,6 +686,7 @@ function App() {
               <Tab label="Import Data" />
               <Tab label="API Test" />
               <Tab label="API Test Dashboard" />
+              <Tab label="TreeMap" />
             </Tabs>
           </AppBar>
 
@@ -863,6 +869,23 @@ function App() {
                 </Typography>
               </Box>
               <ApiTestDashboard />
+            </>
+          )}
+
+          {tabValue === 6 && (
+            <>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                <Typography variant="h5">TreeMap Visualization</Typography>
+              </Box>
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <TransactionTreeMap 
+                    data={summaryData} 
+                    transactions={filteredTransactions} 
+                    summaryData={summaryData}
+                  />
+                </Grid>
+              </Grid>
             </>
           )}
         </Box>

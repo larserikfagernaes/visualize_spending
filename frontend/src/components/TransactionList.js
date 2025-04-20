@@ -22,7 +22,6 @@ import {
   Button
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import SaveIcon from '@mui/icons-material/Save';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import axios from 'axios';
 import TransactionDetailModal from './TransactionDetailModal';
@@ -43,12 +42,12 @@ const TransactionList = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [bankAccountFilter, setBankAccountFilter] = useState('');
-  const [accountIdFilter, setAccountIdFilter] = useState('');
+  const [associatedAccountFilter, setAssociatedAccountFilter] = useState('');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(100);
   const [editingTransaction, setEditingTransaction] = useState(null);
   const [bankAccounts, setBankAccounts] = useState([]);
-  const [accountIds, setAccountIds] = useState([]);
+  const [associatedAccounts, setAssociatedAccounts] = useState([]);
   // Add sort state
   const [sortConfig, setSortConfig] = useState({
     key: null,
@@ -69,7 +68,7 @@ const TransactionList = ({
     loading
   });
 
-  // Extract unique bank accounts and account IDs from transactions
+  // Extract unique bank accounts and associated accounts from transactions
   useEffect(() => {
     if (Array.isArray(transactions) && transactions.length > 0) {
       // Extract bank accounts - use account_id if bank_account fields are not available
@@ -86,21 +85,28 @@ const TransactionList = ({
       
       setBankAccounts(accounts);
       
-      // Extract account IDs
-      const ids = transactions
-        .map(transaction => transaction.account_id)
-        .filter((id, index, self) => 
-          id && self.indexOf(id) === index
-        )
-        .sort();
+      // Extract associated accounts (from related_accounts array)
+      const associatedAccountsList = new Set();
       
-      setAccountIds(ids);
+      transactions.forEach(transaction => {
+        if (transaction.related_accounts && Array.isArray(transaction.related_accounts)) {
+          transaction.related_accounts.forEach(account => {
+            if (account && account.name) {
+              associatedAccountsList.add(account.name);
+            }
+          });
+        }
+      });
       
-      console.log(`Extracted ${accounts.length} bank accounts and ${ids.length} account IDs`);
+      // Convert to array and sort
+      const associatedAccountsArray = Array.from(associatedAccountsList).sort();
+      setAssociatedAccounts(associatedAccountsArray);
+      
+      console.log(`Extracted ${accounts.length} bank accounts and ${associatedAccountsArray.length} associated accounts`);
     }
   }, [transactions]);
 
-  // Filter transactions when transactions, searchTerm, categoryFilter, or bankAccountFilter changes
+  // Filter transactions when transactions, searchTerm, categoryFilter, bankAccountFilter, or associatedAccountFilter changes
   useEffect(() => {
     // Make sure we have transactions before attempting to filter
     if (!Array.isArray(transactions) || transactions.length === 0) {
@@ -128,10 +134,14 @@ const TransactionList = ({
     if (categoryFilter) {
       filtered = filtered.filter(transaction => {
         // Check both category ID and category_name for flexibility
+        // Convert categoryFilter to string for comparison if it's a number
+        const categoryFilterStr = typeof categoryFilter === 'string' ? categoryFilter : String(categoryFilter);
+        
         return (
           transaction.category === categoryFilter || 
           transaction.category === parseInt(categoryFilter) ||
           (transaction.category_name && 
+           typeof categoryFilter === 'string' && 
            transaction.category_name.toLowerCase() === categoryFilter.toLowerCase())
         );
       });
@@ -149,18 +159,48 @@ const TransactionList = ({
       console.log(`After bank account filtering: ${filtered.length} transactions`);
     }
     
-    // Filter by account ID
-    if (accountIdFilter) {
-      filtered = filtered.filter(transaction => 
-        transaction.account_id === accountIdFilter
-      );
-      console.log(`After account ID filtering: ${filtered.length} transactions`);
+    // Filter by associated account
+    if (associatedAccountFilter) {
+      filtered = filtered.filter(transaction => {
+        // Check if transaction has related_accounts array
+        if (!transaction.related_accounts || !Array.isArray(transaction.related_accounts)) {
+          return false;
+        }
+        
+        // Check if any of the related accounts match the filter
+        return transaction.related_accounts.some(account => 
+          account && account.name === associatedAccountFilter
+        );
+      });
+      console.log(`After associated account filtering: ${filtered.length} transactions`);
     }
     
     console.log(`Final filtered transactions: ${filtered.length}`);
     setFilteredTransactions(filtered);
     setPage(0); // Reset to first page when filters change
-  }, [transactions, searchTerm, categoryFilter, bankAccountFilter, accountIdFilter]);
+  }, [transactions, searchTerm, categoryFilter, bankAccountFilter, associatedAccountFilter]);
+
+  // Debug effect to inspect category data structure
+  useEffect(() => {
+    if (filteredTransactions.length > 0) {
+      const sample = filteredTransactions[0];
+      console.log('Sample transaction category data:', {
+        id: sample.id,
+        category: sample.category,
+        category_type: typeof sample.category,
+        category_name: sample.category_name
+      });
+      
+      // Also log the categories list format
+      if (categoriesList.length > 0) {
+        console.log('First category in categoriesList:', {
+          id: categoriesList[0].id,
+          id_type: typeof categoriesList[0].id,
+          name: categoriesList[0].name
+        });
+      }
+    }
+  }, [filteredTransactions, categoriesList]);
 
   // Handle search term change
   const handleSearchChange = (event) => {
@@ -177,9 +217,9 @@ const TransactionList = ({
     setBankAccountFilter(event.target.value);
   };
 
-  // Handle account ID filter change
-  const handleAccountIdFilterChange = (event) => {
-    setAccountIdFilter(event.target.value);
+  // Handle associated account filter change
+  const handleAssociatedAccountFilterChange = (event) => {
+    setAssociatedAccountFilter(event.target.value);
   };
 
   // Handle page change
@@ -194,20 +234,76 @@ const TransactionList = ({
   };
 
   // Handle category change for a transaction
-  const handleCategoryChange = (transactionId, categoryId) => {
+  const handleCategoryChange = async (transactionId, categoryId) => {
+    // Set editing for visual feedback
     setEditingTransaction(transactionId);
-  };
-
-  // Save category change
-  const handleSaveCategory = async (transactionId, categoryId) => {
+    
     try {
-      await axios.post(`${API_URL}/categorize/${transactionId}/`, {
-        category_id: categoryId
+      // Find the category name for the selected category ID (categoryId is a string)
+      const selectedCategory = categoriesList.find(cat => String(cat.id) === categoryId);
+      const categoryName = selectedCategory ? selectedCategory.name : null;
+      
+      // Convert empty string to null for the API
+      const apiCategoryId = categoryId === '' ? null : categoryId;
+      
+      // Log the category change for debugging
+      console.log('Changing category:', {
+        transactionId,
+        categoryId,
+        apiCategoryId,
+        categoryName,
+        selectedCategory
       });
-      setEditingTransaction(null);
-      if (onUpdate) onUpdate();
+      
+      // Save immediately when category is changed
+      const response = await axios.post(`${API_URL}/categorize/${transactionId}/`, {
+        category_id: apiCategoryId
+      });
+      
+      // Update the transaction in the UI regardless of batch update
+      const updateTransaction = (tx) => {
+        if (tx.id === transactionId) {
+          return {
+            ...tx,
+            category: categoryId ? parseInt(categoryId) : null,
+            category_name: categoryName
+          };
+        }
+        
+        // If batch updating (same supplier), update other transactions from same supplier
+        if (response.data.updated_transactions_count && 
+            response.data.transaction?.supplier &&
+            tx.supplier === response.data.transaction.supplier) {
+          return {
+            ...tx,
+            category: categoryId ? parseInt(categoryId) : null,
+            category_name: categoryName
+          };
+        }
+        
+        return tx;
+      };
+      
+      // Always update filtered transactions for immediate UI feedback
+      setFilteredTransactions(prevTransactions => 
+        prevTransactions.map(updateTransaction)
+      );
+      
+      // If there was a batch update, we should refresh the entire list
+      if (response.data.updated_transactions_count && onUpdate) {
+        console.log(`Updated ${response.data.updated_transactions_count} transactions with the same supplier`);
+        onUpdate();
+      }
+      
+      // Clear editing status after a short delay for visual feedback
+      setTimeout(() => {
+        setEditingTransaction(null);
+      }, 500);
+      
     } catch (error) {
       console.error('Error updating category:', error);
+      // Clear editing status
+      setEditingTransaction(null);
     }
   };
 
@@ -354,7 +450,7 @@ const TransactionList = ({
     }
     
     // Define CSV columns
-    const headers = ['Date', 'Description', 'Amount', 'Bank Account', 'Account ID', 'Category'];
+    const headers = ['Date', 'Description', 'Amount', 'Bank Account', 'Supplier', 'Category'];
     
     // Convert filtered transactions to CSV rows
     const rows = filteredTransactions.map(transaction => [
@@ -363,7 +459,7 @@ const TransactionList = ({
       `"${(transaction.description || '').replace(/"/g, '""')}"`,
       transaction.amount,
       transaction.bank_account_name || transaction.bank_account_id || 'Unknown',
-      transaction.account_id || 'N/A',
+      transaction.supplier_name || 'No Supplier',
       transaction.category_name || 'Uncategorized'
     ]);
     
@@ -451,7 +547,7 @@ const TransactionList = ({
               Filtered count: {filteredTransactions.length}<br />
               Categories count: {categoriesList.length}<br />
               Bank accounts count: {bankAccounts.length}<br />
-              Account IDs count: {accountIds.length}<br />
+              Associated accounts count: {associatedAccounts.length}<br />
               All transactions loaded: {showingAllTransactions ? 'Yes' : 'No (first page only)'}<br />
               Universal filters active: Yes (applied from App component)
             </Typography>
@@ -517,17 +613,17 @@ const TransactionList = ({
             </TextField>
             <TextField
               select
-              label="Account ID"
+              label="Associated Account"
               variant="outlined"
               size="small"
-              value={accountIdFilter}
-              onChange={handleAccountIdFilterChange}
-              sx={{ minWidth: '150px' }}
+              value={associatedAccountFilter}
+              onChange={handleAssociatedAccountFilterChange}
+              sx={{ minWidth: '200px' }}
             >
-              <MenuItem value="">All Account IDs</MenuItem>
-              {accountIds.map((id) => (
-                <MenuItem key={id} value={id}>
-                  {id}
+              <MenuItem value="">All Associated Accounts</MenuItem>
+              {associatedAccounts.map((account) => (
+                <MenuItem key={account} value={account}>
+                  {account}
                 </MenuItem>
               ))}
             </TextField>
@@ -571,7 +667,7 @@ const TransactionList = ({
                       </TableSortLabel>
                     </TableCell>
                     <TableCell>Bank Account</TableCell>
-                    <TableCell>Account ID</TableCell>
+                    <TableCell>Supplier</TableCell>
                     <TableCell>Category</TableCell>
                   </TableRow>
                 </TableHead>
@@ -601,36 +697,34 @@ const TransactionList = ({
                              (transaction.account_id ? `Account: ${transaction.account_id}` : 'Unknown')}
                           </TableCell>
                           <TableCell>
-                            {transaction.account_id || 'N/A'}
+                            {transaction.supplier_name || 'No Supplier'}
                           </TableCell>
                           <TableCell onClick={(e) => e.stopPropagation()}>
                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                               <TextField
                                 select
                                 size="small"
-                                value={transaction.category || ''}
+                                value={transaction.category ? String(transaction.category) : ''}
                                 onChange={(e) => handleCategoryChange(transaction.id, e.target.value)}
                                 variant="outlined"
                                 sx={{ minWidth: 150 }}
+                                SelectProps={{
+                                  renderValue: (value) => {
+                                    if (!value) return "Uncategorized";
+                                    const cat = categoriesList.find(c => String(c.id) === value);
+                                    return cat ? cat.name : "Uncategorized";
+                                  },
+                                }}
                               >
                                 <MenuItem value="">Uncategorized</MenuItem>
                                 {categoriesList.map((category) => (
-                                  <MenuItem key={category.id} value={category.id}>
+                                  <MenuItem key={category.id} value={String(category.id)}>
                                     {category.name}
                                   </MenuItem>
                                 ))}
                               </TextField>
                               {editingTransaction === transaction.id && (
-                                <IconButton 
-                                  size="small" 
-                                  color="primary"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleSaveCategory(transaction.id, transaction.category);
-                                  }}
-                                >
-                                  <SaveIcon />
-                                </IconButton>
+                                <CircularProgress size={20} sx={{ ml: 1 }} />
                               )}
                             </Box>
                           </TableCell>

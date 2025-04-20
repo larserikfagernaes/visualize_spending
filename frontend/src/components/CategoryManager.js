@@ -21,8 +21,10 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
 
 const API_URL = 'http://localhost:8000/api/v1';
+// Create encoded credentials
+const authCredentials = btoa('dev:dev');
 
-const CategoryManager = ({ categories = [], onUpdate }) => {
+const CategoryManager = ({ categories = [], onCategoryUpdate }) => {
   const [newCategory, setNewCategory] = useState({ name: '', description: '' });
   const [editCategory, setEditCategory] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -30,32 +32,51 @@ const CategoryManager = ({ categories = [], onUpdate }) => {
   // Ensure categories is always an array
   const categoriesList = Array.isArray(categories) ? categories : [];
 
+  // Default request configuration with authentication
+  const requestConfig = {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Basic ${authCredentials}`
+    },
+    withCredentials: true
+  };
+
   const handleAddCategory = async () => {
     try {
-      await axios.post(`${API_URL}/categories/`, newCategory);
+      console.log('Adding new category:', newCategory);
+      const response = await axios.post(`${API_URL}/categories/`, newCategory, requestConfig);
+      console.log('Category added successfully:', response.data);
       setNewCategory({ name: '', description: '' });
-      if (onUpdate) onUpdate();
+      if (onCategoryUpdate) {
+        console.log('Calling onCategoryUpdate to refresh categories list');
+        onCategoryUpdate();
+      }
     } catch (error) {
       console.error('Error adding category:', error);
+      console.error('Response data:', error.response?.data);
     }
   };
 
   const handleUpdateCategory = async () => {
     try {
-      await axios.put(`${API_URL}/categories/${editCategory.id}/`, editCategory);
+      const response = await axios.put(`${API_URL}/categories/${editCategory.id}/`, editCategory, requestConfig);
+      console.log('Category updated successfully:', response.data);
       setDialogOpen(false);
-      if (onUpdate) onUpdate();
+      if (onCategoryUpdate) onCategoryUpdate();
     } catch (error) {
       console.error('Error updating category:', error);
+      console.error('Response data:', error.response?.data);
     }
   };
 
   const handleDeleteCategory = async (id) => {
     try {
-      await axios.delete(`${API_URL}/categories/${id}/`);
-      if (onUpdate) onUpdate();
+      await axios.delete(`${API_URL}/categories/${id}/`, requestConfig);
+      console.log('Category deleted successfully');
+      if (onCategoryUpdate) onCategoryUpdate();
     } catch (error) {
       console.error('Error deleting category:', error);
+      console.error('Response data:', error.response?.data);
     }
   };
 

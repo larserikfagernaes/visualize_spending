@@ -63,6 +63,8 @@ class TransactionSerializer(serializers.ModelSerializer):
     """
     category_name = serializers.SerializerMethodField()
     bank_account_name = serializers.SerializerMethodField()
+    supplier_name = serializers.SerializerMethodField()
+    related_accounts = serializers.SerializerMethodField()
     
     class Meta:
         model = Transaction
@@ -70,7 +72,8 @@ class TransactionSerializer(serializers.ModelSerializer):
                  'bank_account', 'bank_account_name', 'bank_account_id', 'account_id',
                  'is_internal_transfer', 'is_wage_transfer', 'is_tax_transfer',
                  'is_forbidden', 'should_process',
-                 'category', 'category_name', 'imported_at', 'updated_at']
+                 'category', 'category_name', 'supplier', 'supplier_name', 
+                 'related_accounts', 'imported_at', 'updated_at']
     
     def get_category_name(self, obj):
         """Get the name of the category associated with this transaction."""
@@ -83,6 +86,26 @@ class TransactionSerializer(serializers.ModelSerializer):
         if obj.bank_account:
             return obj.bank_account.name
         return obj.bank_account_id
+        
+    def get_supplier_name(self, obj):
+        """Get the name of the supplier associated with this transaction."""
+        if obj.supplier:
+            return obj.supplier.name
+        return None
+        
+    def get_related_accounts(self, obj):
+        """Get the related accounts through the M2M relationship."""
+        return [
+            {
+                'id': account.id,
+                'name': account.name,
+                'account_number': account.account_number,
+                'amount': ta.amount
+            }
+            for ta in obj.transaction_accounts.select_related('account').all()
+            for account in [ta.account]
+            if account
+        ]
 
 class TransactionDetailSerializer(TransactionSerializer):
     """
@@ -114,4 +137,5 @@ class TransactionSummarySerializer(serializers.Serializer):
     total_transactions = serializers.IntegerField()
     total_amount = serializers.DecimalField(max_digits=12, decimal_places=2)
     categories = serializers.DictField(child=serializers.DictField())
-    bank_accounts = serializers.DictField(child=serializers.DictField()) 
+    bank_accounts = serializers.DictField(child=serializers.DictField())
+    related_accounts = serializers.DictField(child=serializers.DictField()) 

@@ -11,6 +11,7 @@ from .api.views import (
     import_from_tripletex,
     analyze_transfers
 )
+from .views import categorize_transaction
 
 # Create a router and register our viewsets with it
 router = DefaultRouter()
@@ -27,4 +28,7 @@ urlpatterns = [
     # Import and analysis endpoints
     path('import-tripletex/', import_from_tripletex, name='import-from-tripletex'),
     path('analyze-transfers/', analyze_transfers, name='analyze-transfers'),
+    
+    # Category endpoints
+    path('categorize/<int:transaction_id>/', categorize_transaction, name='categorize-transaction'),
 ] 

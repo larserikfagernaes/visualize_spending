@@ -11,7 +11,14 @@ from .models import BankStatement, Transaction, Category
 from .serializers import BankStatementSerializer, TransactionSerializer, CategorySerializer, TransactionSummarySerializer
 import datetime
 import decimal
-from .get_transactions import get_current_directory
+
+# Create get_current_directory function to replace the import
+def get_current_directory():
+    """
+    Returns the absolute directory path of the current file.
+    This is useful for referencing files relative to this script.
+    """
+    return os.path.dirname(os.path.abspath(__file__))
 
 # Create your views here.
 
@@ -238,7 +245,10 @@ def import_transactions(request):
 
 @api_view(['POST'])
 def categorize_transaction(request, transaction_id):
-    """Categorize a transaction."""
+    """
+    Categorize a transaction and all other transactions from the same supplier.
+    Also creates or updates a supplier-category mapping relationship.
+    """
     try:
         transaction = Transaction.objects.get(id=transaction_id)
     except Transaction.DoesNotExist:
@@ -249,108 +259,86 @@ def categorize_transaction(request, transaction_id):
     if category_id:
         try:
             category = Category.objects.get(id=category_id)
+            
+            # Update this transaction's category
             transaction.category = category
+            transaction.save()
+            
+            # If transaction has a supplier, update all related transactions
+            if transaction.supplier:
+                try:
+                    # Try to use CategorySupplierMap if it exists
+                    from .models import CategorySupplierMap
+                    
+                    # Create or update the mapping
+                    try:
+                        mapping, created = CategorySupplierMap.objects.update_or_create(
+                            supplier=transaction.supplier,
+                            defaults={'category': category}
+                        )
+                    except Exception as e:
+                        print(f"Error creating/updating CategorySupplierMap: {e}")
+                except ImportError:
+                    # If CategorySupplierMap doesn't exist yet, just skip it
+                    pass
+                
+                # Update all transactions from the same supplier
+                # This works even without the CategorySupplierMap model
+                updated_count = Transaction.objects.filter(
+                    supplier=transaction.supplier
+                ).update(category=category)
+                
+                # Get updated transaction data with serializer
+                updated_transaction = TransactionSerializer(transaction).data
+                
+                return Response({
+                    'transaction': updated_transaction,
+                    'updated_transactions_count': updated_count,
+                    'message': f'Updated {updated_count} transactions with supplier {transaction.supplier.name}'
+                })
+            
         except Category.DoesNotExist:
             return Response({"error": "Category not found"}, status=status.HTTP_404_NOT_FOUND)
     else:
+        # Remove category from this transaction
         transaction.category = None
+        transaction.save()
+        
+        # If transaction has a supplier, remove category from all related transactions
+        if transaction.supplier:
+            try:
+                # Try to delete the CategorySupplierMap if it exists
+                from .models import CategorySupplierMap
+                CategorySupplierMap.objects.filter(supplier=transaction.supplier).delete()
+            except ImportError:
+                # If CategorySupplierMap doesn't exist yet, just skip it
+                pass
+            
+            # Remove category from all transactions with this supplier
+            # This works even without the CategorySupplierMap model
+            updated_count = Transaction.objects.filter(
+                supplier=transaction.supplier
+            ).update(category=None)
+            
+            # Get updated transaction data with serializer
+            updated_transaction = TransactionSerializer(transaction).data
+            
+            return Response({
+                'transaction': updated_transaction,
+                'updated_transactions_count': updated_count,
+                'message': f'Removed category from {updated_count} transactions with supplier {transaction.supplier.name}'
+            })
     
-    transaction.save()
     serializer = TransactionSerializer(transaction)
     return Response(serializer.data)
 
 @api_view(['POST'])
 def import_from_tripletex(request):
-    """Import transactions from Tripletex using get_transactions.py."""
-    from .get_transactions import get_all_bank_statements
-    
-    try:
-        # Create Expense and Income categories
-        expense_category, _ = Category.objects.get_or_create(
-            name="Expenses",
-            defaults={"description": "All expenses imported from Tripletex"}
-        )
-        
-        income_category, _ = Category.objects.get_or_create(
-            name="Income",
-            defaults={"description": "All income imported from Tripletex"}
-        )
-        
-        # Get bank statements from Tripletex
-        data = get_all_bank_statements(force_refresh=False, cache_days=1)
-        
-        # Transaction counters
-        transactions_imported = 0
-        transactions_skipped = 0
-        
-        # Process each bank statement
-        for statement in data["values"]:
-            # Each statement contains multiple transactions
-            for tx in statement.get("transactions", []):
-                if "detailed_data" not in tx or "processed_data" not in tx:
-                    transactions_skipped += 1
-                    continue
-                
-                # Get transaction details
-                detail = tx["detailed_data"].get("value", {})
-                processed = tx["processed_data"]
-                
-                # Skip if necessary data is missing
-                tx_id = detail.get("id", None)
-                if not tx_id:
-                    transactions_skipped += 1
-                    continue
-                
-                # Check if transaction already exists
-                if Transaction.objects.filter(tripletex_id=str(tx_id)).exists():
-                    transactions_skipped += 1
-                    continue
-                
-                # Extract needed fields
-                description = detail.get("description", "")
-                amount_currency = detail.get("amountCurrency")
-                date_str = detail.get("date")
-                
-                if not description or amount_currency is None or not date_str:
-                    transactions_skipped += 1
-                    continue
-                
-                try:
-                    amount = Decimal(str(amount_currency))
-                    date = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
-                except (ValueError, decimal.InvalidOperation):
-                    transactions_skipped += 1
-                    continue
-                
-                # Choose category based on amount
-                category = income_category if amount >= 0 else expense_category
-                
-                # Create the transaction
-                Transaction.objects.create(
-                    tripletex_id=str(tx_id),
-                    description=description,
-                    amount=amount,
-                    date=date,
-                    bank_account_id=processed.get("bank_account_id", ""),
-                    is_internal_transfer=processed.get("is_internal_transfer", False),
-                    is_wage_transfer=processed.get("is_wage_transfer", False),
-                    is_tax_transfer=processed.get("is_tax_transfer", False),
-                    is_forbidden=processed.get("is_forbidden", False),
-                    should_process=processed.get("should_process", True),
-                    category=category
-                )
-                
-                transactions_imported += 1
-        
-        return Response({
-            "message": f"Successfully imported {transactions_imported} transactions",
-            "imported": transactions_imported,
-            "skipped": transactions_skipped
-        })
-        
-    except Exception as e:
-        return Response({"error": f"Error importing from Tripletex: {str(e)}"}, 
-                       status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    """Import transactions from Tripletex."""
+    # This function is temporarily disabled
+    return Response({
+        "error": "This endpoint is temporarily disabled. Please use the manual import option instead."
+    }, status=status.HTTP_503_SERVICE_UNAVAILABLE)
 
 @api_view(['GET'])
 def analyze_transfers(request):
