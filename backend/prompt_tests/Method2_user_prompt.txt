@@ -1,0 +1,2605 @@
+
+SUPPLIER_PROFILES (Known suppliers with example descriptions and key terms):
+[
+  {
+    "supplier_name": "Telenor Norge AS",
+    "description_examples": [
+      "023?00TRANSFER?20TR187556964?3100000000035?32SUMPOST",
+      "VISA VARE *4174 26.07 NOK 1990.00 TELENOR NETTBUTIKK PRIVAT Kurs: 1.0000",
+      "OPPGAVE Til: Telenor Norge AS",
+      "043?00GIRO?20Telenor mobildata?3160050777122?32TELENOR NORGE AS",
+      "OPPGAVE Til: Telenor Norge ASTelenor Norge AS"
+    ],
+    "key_terms": [
+      "023?00transfer?20tr178943609?3100000000035?32sumpost",
+      "norge",
+      "023?00transfer?20tr187556964?3100000000035?32sumpost",
+      "*4174",
+      "mobildata?3160050777122?32telenor",
+      "023?00transfer?20tr202175797?3100000000035?32sumpost",
+      "1.0000",
+      "privat",
+      "telenor",
+      "043?00giro?3160050777122?32telenor"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 805",
+    "description_examples": [
+      "VISA VARE *0345 13.03 SEK 103.80 MAXI ICA STORMARKNAD VARM Kurs: 1.0953",
+      "VISA VARE *0345 06.02 SEK 53.90 MAXI ICA STORMARKNAD VARM Kurs: 1.0512",
+      "VISA VARE *0345 14.03 SEK 51.90 MAXI ICA STORMARKNAD VARM Kurs: 1.0867",
+      "VISA VARE *0345 14.03 SEK 53.90 MAXI ICA STORMARKNAD VARM Kurs: 1.0866",
+      "VISA VARE *0345 06.04 SEK 43.95 MAXI ICA STORMARKNAD VARM Kurs: 1.1008"
+    ],
+    "key_terms": [
+      "16.03",
+      "1.0594",
+      "130.35",
+      "01.03",
+      "04.04",
+      "1.1028",
+      "09.02",
+      "1.0496",
+      "1.1165",
+      "11.04"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 4",
+    "description_examples": [
+      "VISA VARE *4174 06.06 EUR 10.86 aliexpress Kurs: 11.7597",
+      "VISA VARE *4174 20.06 EUR 11.96 aliexpress Kurs: 11.9147",
+      "VISA VARE *4174 24.11 USD 86.98 aliexpress Kurs: 11.0169",
+      "015?00VISA?20USD 597,80 www.aliexpress.c?21om VALUTAKURS: 10,0552, ?3100000000000?32064697692307920011616378113?33078",
+      "VISA VARE *4174 15.01 EUR 201.65 ALIEXPRESSCOM Kurs: 11.5713"
+    ],
+    "key_terms": [
+      "6.79",
+      "10,2942",
+      "11.0834",
+      "015?00visa?3100000000000?32054987502244003924485854112?33965?34us,",
+      "24.11",
+      "1387,56",
+      "11.3109",
+      "42.51",
+      "78,29",
+      "11.4129"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 20",
+    "description_examples": [
+      "021?00SALARY?2059190495-2025-02-02T17:31:1?3100000000035",
+      "023?00TRANSFER?20TR242216171?3100000000035?32SUMPOST",
+      "023?00TRANSFER?20TR187045565?3100000000035?32SUMPOST",
+      "021?00SALARY?2063427604-2025-04-14T18:50:5?3100000000035",
+      "OPPGAVE Til: Tripletex ASTripletex AS"
+    ],
+    "key_terms": [
+      "023?00transfer?20tr211974894?3100000000035?32sumpost",
+      "finter",
+      "023?00transfer?20tr190450294?3100000000035?32sumpost",
+      "021?00salary?2060756759-2025-03-03t03:06:3?3100000000035",
+      "023?00transfer?20tr196700263?3100000000035?32sumpost",
+      "023?00transfer?20tr207908179?3100000000035?32sumpost",
+      "043?00giro?20tr386468924?3160450542183?32tripletex",
+      "021?00salary?20tr190450286?3100000000035",
+      "04.04.25aviant",
+      "043?00giro?20fnr"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 65",
+    "description_examples": [
+      "VARER 23.01 BILTEMA AVD 275 LADE ARENA,  TRONDHEIM",
+      "048?00DEBIT CARD TRANS?3170010078581?32ARK.REF .17709826   DATO 1, 9?33.04?34KL. 15.03 VERSJON 1 AUT. 11?35BILTEMA AVD 202 OSTRE ROS, TE",
+      "VARER 03.01 BILTEMA AVD 202 \u00d8STRE ROSTEN TILLER",
+      "VARER 26.07 BILTEMA AVD 202 \u00d8STRE ROSTEN TILLER",
+      "VARER 22.11 BILTEMA AVD 202 \u00d8STRE ROSTEN TILLER"
+    ],
+    "key_terms": [
+      "015?00visa?3100000000000?32054456392244150001885965112?33967?34bi,",
+      "275",
+      "09.04",
+      ".17789781",
+      "09.01",
+      "2?33.10?34kl.",
+      "dato",
+      "3?33.10?34kl.",
+      "14.28",
+      "benja"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 175",
+    "description_examples": [
+      "043?00GIRO?20TAX5938252?3197500700266?32DHL EXPRESS (NORWAY) AS",
+      "048?00DEBIT CARD TRANS?3170010078581?3205498750208036865256724011, 2?33602?34DHL Express (Norway) AS",
+      "043?00GIRO?20TR386468922?3197500700266?32Dhl Express (norway) AS",
+      "048?00DEBIT CARD TRANS?3170010078581?3205498750216100021660764011, 2?33753?34DHL Express (Norway) AS",
+      "048?00DEBIT CARD TRANS?3170010078581?3205498750221000658243494011, 2?33872?34Betaling i DHL Global Pay"
+    ],
+    "key_terms": [
+      "norway",
+      "3661.34",
+      "trans?3170010078581?3205498750221000658243494011,",
+      "439.00",
+      "trans?3170010078581?3205498750222226142663494211,",
+      "043?00giro?20tr429645065?3197500700266?32dhl",
+      "2?33872?34betaling",
+      "norge",
+      "betalt:",
+      "2?33670?34dhl"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 158",
+    "description_examples": [
+      "023?00TRANSFER?20TR196700267?3100000000035?32SUMPOST",
+      "023?00TRANSFER?20TR187556965?3100000000035?32SUMPOST",
+      "023?00TRANSFER?20TR196700271?3100000000035?32SUMPOST",
+      "023?00TRANSFER?20TR187556957?3100000000035?32SUMPOST",
+      "043?00GIRO?20TR386468920?3132073595222?32Flyt AS"
+    ],
+    "key_terms": [
+      "flyt",
+      "023?00transfer?20tr196700267?3100000000035?32sumpost",
+      "asflyt",
+      "043?00giro?3160750630424?32vegamot",
+      "023?00transfer?20tr184481188?3100000000035?32sumpost",
+      "043?00giro?20tr386468920?3132073595222?32flyt",
+      "023?00transfer?20tr196700271?3100000000035?32sumpost",
+      "023?00transfer?20tr187556957?3100000000035?32sumpost",
+      "023?00transfer?20tr187556965?3100000000035?32sumpost",
+      "023?00transfer?20tr202175800?3100000000035?32sumpost"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 409",
+    "description_examples": [
+      "023?00TRANSFER?20TR244885857?3100000000035?32SUMPOST",
+      "043?00GIRO?20TR386468926?3170380540884?32SNAP DRIVE AS",
+      "023?00TRANSFER?20TR241850827?3100000000035?32SUMPOST",
+      "OPPGAVE Til: Snap Drive ASSnap Drive AS",
+      "023?00TRANSFER?20TR244885859?3100000000035?32SUMPOST"
+    ],
+    "key_terms": [
+      "assnap",
+      "043?00giro?20tr386468926?3170380540884?32snap",
+      "023?00transfer?20tr241850827?3100000000035?32sumpost",
+      "023?00transfer?20tr244885859?3100000000035?32sumpost",
+      "snap",
+      "023?00transfer?20tr244885857?3100000000035?32sumpost",
+      "drive"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 109",
+    "description_examples": [
+      "015?00VISA?20NOK 3011,00 GETAROUND?3100000000000?3206460905225100, 0010830591467?33370",
+      "VISA VARE *0345 24.10 NOK 159.20 GETAROUND Kurs: 1.0000",
+      "048?00DEBIT CARD TRANS?3170010078581?3205460905200700000583171846, 6?33397?34NOK 263,00 GETAROUND",
+      "048?00DEBIT CARD TRANS?3170010078581?3205460905132800000709325346, 6?33254?34NOK 12478,00 GETAROUND",
+      "015?00VISA?3100000000000?32054609052245000006466243467?33357?34NO, K 6719,00 GETAROUND"
+    ],
+    "key_terms": [
+      "olav",
+      "400,00",
+      "betalt:",
+      "7413.00",
+      "trans?3170010078581?3205460905133100001137204546,",
+      "11.10",
+      "3011,00",
+      "6?33338?34nok",
+      "nok",
+      "trans?3170010078581?3205460905135400000567404446,"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 31",
+    "description_examples": [
+      "RWEGIAN AI3287392895798",
+      "VISA VARE *4871 13.11 NOK 2268.00 NORWEGIAN A 3287387992315 Kurs: 1.0000",
+      "RWEGIAN A 3287416852175",
+      "048?00DEBIT CARD TRANS?3170010078581?3205416390204920629023090446, 6?33493?34NORWEGIAN A 328-735535460",
+      "048?00DEBIT CARD TRANS?3170010078581?3205446366133059331848038046, 6?33269?34NORWEGIAN AI3287352604632"
+    ],
+    "key_terms": [
+      "trans?3170010078581?3205446366132757328398802646,",
+      "ai3287366668708",
+      "3287376037143",
+      "trans?3170010078581?3205416390219322735621729046,",
+      "ai3287413221957",
+      "trans?3170010078581?3205416390205720829293811146,",
+      "trans?3170010078581?3205416390223023237839511146,",
+      "trans?3170010078581?3205446366127252273492601546,",
+      "03.09",
+      "28.09"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 916",
+    "description_examples": [
+      "VISA VARE *0345 18.02 SEK 117.70 LIDL 186 VARMDO Kurs: 1.0630",
+      "VISA VARE *0345 20.01 SEK 39.90 LIDL 186 VARMDO Kurs: 1.0496",
+      "VISA VARE *0345 17.04 SEK 35.90 LIDL 186 VARMDO Kurs: 1.1145",
+      "VISA VARE *0345 02.03 SEK 175.60 LIDL 186 VARMDO Kurs: 1.0715",
+      "VISA VARE *0345 12.03 SEK 89.90 LIDL 186 VARMDO Kurs: 1.0906"
+    ],
+    "key_terms": [
+      "lidl",
+      "16.04",
+      "1.0715",
+      "117.70",
+      "89.90",
+      "1.1146",
+      "175.60",
+      "1.1145",
+      "1.0496",
+      "17.04"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 931",
+    "description_examples": [
+      "VISA VARE *0345 16.04 SEK 180.00 ZETTLE *THE WAGON BURG Kurs: 1.1146",
+      "VISA VARE *0345 23.02 SEK 180.00 Zettle *The Wagon Burgers Kurs: 1.0762",
+      "VISA VARE *0345 03.04 SEK 180.00 ZETTLE *THE WAGON BURG Kurs: 1.0768",
+      "VISA VARE *0345 02.02 SEK 195.00 ZETTLE *THE WAGON BURG Kurs: 1.0492",
+      "VISA VARE *0345 25.02 SEK 195.00 Zettle *The Wagon Burgers Kurs: 1.0722"
+    ],
+    "key_terms": [
+      "1.0762",
+      "16.04",
+      "burg",
+      "02.02",
+      "195.00",
+      "1.1146",
+      "23.02",
+      "180.00",
+      "burgers",
+      "03.04"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 942",
+    "description_examples": [
+      "VISA VARE *0345 02.04 SEK 149.00 INFINITY EATS AB Kurs: 1.0750",
+      "VISA VARE *0345 15.03 SEK 140.00 INFINITY EATS AB Kurs: 1.0794",
+      "VISA VARE *0345 17.04 SEK 160.00 INFINITY EATS AB Kurs: 1.1147",
+      "VISA VARE *0345 15.11 SEK 4070.00 Blique AB Kurs: 1.0383",
+      "VISA VARE *0345 19.02 SEK 160.00 INFINITY EATS AB Kurs: 1.0631"
+    ],
+    "key_terms": [
+      "1.0631",
+      "1.0383",
+      "eats",
+      "160.00",
+      "15.03",
+      "140.00",
+      "04.04",
+      "blique",
+      "02.04",
+      "19.02"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 937",
+    "description_examples": [
+      "VISA VARE *0345 15.03 SEK 190.40 WILLYS VARMDO KOPCEN Kurs: 1.0794",
+      "VISA VARE *0345 26.02 SEK 35.80 WILLYS VARMDO KOPCEN Kurs: 1.0715",
+      "VISA VARE *0345 18.04 SEK 1206.34 INGO VERMDO CENTRUM Kurs: 1.1180",
+      "VISA VARE *0345 23.02 SEK 46.90 WILLYS VARMDO KOPCEN Kurs: 1.0761",
+      "VISA VARE *0345 05.03 SEK 117.30 WILLYS VARMDO KOPCEN Kurs: 1.0928"
+    ],
+    "key_terms": [
+      "46.90",
+      "05.03",
+      "1.0715",
+      "willys",
+      "23.02",
+      "vermdo",
+      "1206.34",
+      "15.03",
+      "117.30",
+      "1.0928"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 30",
+    "description_examples": [
+      "015?00VISA?3100000000000?32054163622314457275916619113?33116?34RS, COMPONENTS AS",
+      "VISA VARE *2699 11.12 NOK 803.60 RS COMPONENTS AS Kurs: 1.0000",
+      "048?00DEBIT CARD TRANS?3170010078581?3205416362215541112206056011, 2?33728?34RS COMPONENTS AS",
+      "015?00VISA?3100000000000?32054163623011474860275487113?33230?34RS, COMPONENTS AS",
+      "VISA VARE *2699 28.10 NOK 966.03 RS COMPONENTS AS Kurs: 1.0000"
+    ],
+    "key_terms": [
+      "10.10",
+      "09.04",
+      "656.19",
+      "03.09",
+      "5?33868?34rs",
+      "2?33515?34rs",
+      "6?33548?34rs",
+      "trans?3170010078581?3205416362123433251819245146,",
+      "1219.04",
+      "015?00visa?3100000000000?32054163622331462346856645113?33169?34rs,"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 782",
+    "description_examples": [
+      "VISA VARE *2699 04.04 USD 1351.69 PCBWAY Kurs: 10.6717",
+      "VISA VARE *2699 10.04 USD 104.97 PCBWAY Kurs: 11.2235",
+      "VISA VARE *3646 18.02 USD 533.69 PCBWAY Kurs: 11.4036",
+      "VISA VARE *3646 14.02 USD 1683.99 PCBWAY Kurs: 11.5239",
+      "VISA VARE *3646 16.04 USD 69.99 RUNCAM LIMITED Kurs: 10.8867"
+    ],
+    "key_terms": [
+      "533.69",
+      "11.5239",
+      "05.03",
+      "16.04",
+      "11.2235",
+      "*3646",
+      "11.4749",
+      "11.5030",
+      "14.02",
+      "04.04"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 488",
+    "description_examples": [
+      "D 14,00 GITHUB, INC.?35VALUTAKURS:    11,4114",
+      "D 14,00 GITHUB, INC.?35VALUTAKURS:    10,7828",
+      "D 14,00 GITHUB, INC.?35VALUTAKURS:    10,8628",
+      "OVFUTLAND GITHUB, INC.    BF2403250254103AGitHub, Inc.",
+      "VISA VARE *3646 14.04 USD 45.00 COGNITION LABS (DEVIN) Kurs: 11.0920"
+    ],
+    "key_terms": [
+      "10,7828",
+      "bf2403250254103agithub,",
+      "d",
+      "4.86",
+      "19,00",
+      "11,0907",
+      "7,74",
+      "11,3457",
+      "18.01",
+      "inc."
+    ]
+  },
+  {
+    "supplier_name": "Supplier 114",
+    "description_examples": [
+      "D 15,00 WETRANSFER: E332C?35VALUTAKURS:    10,7933",
+      "048?00DEBIT CARD TRANS?3170010078581?3205460905200100000808285146, 6?33372?34USD 15,00 WETRANSFER?35VALUTAKURS:     9,0333",
+      "D 23,00 WETRANSFER: E332C?35VALUTAKURS:    11,5273",
+      "D 15,00 WETRANSFER?35VALUTAKURS:    10,9260",
+      "D 15,00 WETRANSFER: E332C?35VALUTAKURS:    11,2453"
+    ],
+    "key_terms": [
+      "10,9860",
+      "10,8453",
+      "10,1520",
+      "11,7335",
+      "6?33455?34usd",
+      "10,6666",
+      "11,5273",
+      "11,3460",
+      "015?00visa?3100000000000?32054609052335000014740895467?33561?34us,",
+      "11,2620"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 92",
+    "description_examples": [
+      "VISA VARE *0068 12.03 NOK 10475.55 AIRBNB * HMA54KBBMK Kurs: 1.0000",
+      "015?00VISA?3100000000000?32054313252238101380585020467?33324?34NO, K 10194,49 AIRBNB : HMHDB",
+      "K 4864,71 AIRBNB : HMAQRD",
+      "015?00VISA?3100000000000?32054313252268103231168744467?33430?34NO, K 10194,49 AIRBNB : HMHDB",
+      "048?00DEBIT CARD TRANS?3170010078581?3205431325131610080491088646, 6?33193?34NOK 936,73 AIRBNB : HM822CD"
+    ],
+    "key_terms": [
+      "trans?3170010078581?3205431325219610053511158346,",
+      "hmhdbw",
+      "hmeq8xw8z4",
+      "1507,60",
+      "hmrj4jrmc3",
+      "hmxhmw",
+      "trans?3170010078581?3205431325135810079318864246,",
+      "2513,43",
+      "015?00visa?3100000000000?32054313252238101380585020467?33324?34no,",
+      "8371.23"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 17",
+    "description_examples": [
+      "048?00DEBIT CARD TRANS?3170010078581?3205479631226100008281826746, 7?33401?34NOK 295,00 ADOBE CREATIVE C",
+      "015?00VISA?3100000000000?32054143612294000208490011467?33470?34NO, K 236,00 ADOBE",
+      "048?00DEBIT CARD TRANS?3170010078581?3205431325216810093813689246, 7?33014?34NOK 295,00 ADOBE CREATIVE C",
+      "K 580,00 ADOBE",
+      "048?00DEBIT CARD TRANS?3170010078581?3205431325207610031047850946, 6?33599?34NOK 191,25 ADOBE CREATIVE C"
+    ],
+    "key_terms": [
+      "236,00",
+      "trans?3170010078581?3205431325204810078030972646,",
+      "7?33273?34nok",
+      "7?33156?34nok",
+      "015?00visa?3100000000000?32054143613017000172160503467?33639?34no,",
+      "6?33331?34nok",
+      "k",
+      "6?33707?34nok",
+      "015?00visa?3100000000000?32054143612351000200540334467?33590?34no,",
+      "015?00visa?3100000000000?32054143612294000208490011467?33470?34no,"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 623",
+    "description_examples": [
+      ".: V87751?35SEK           5.000,00",
+      "ref.: V80723?35EUR           2.395,65",
+      "ref.: V41006?35EUR           4.612,81",
+      "ref.: V43175?35EUR           4.744,00",
+      "OVFUTLAND PIERRO CRISTINA BF2503110046903Pierro Cristina"
+    ],
+    "key_terms": [
+      "v87751?35sek",
+      "4.612,81",
+      "v41006?35eur",
+      "ovfutland",
+      "bf2503110046903pierro",
+      "2.395,65",
+      "cristina",
+      ".:",
+      "v80723?35eur",
+      "5.000,00"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 66",
+    "description_examples": [
+      "VISA VARE *4174 07.07 NOK 1699.60 Klarna*clasohlson.com no Kurs: 1.0000",
+      "VARER 11.12 CLAS OHL 2832 \u00d8STRE ROSTEN TILLER",
+      "VISA VARE *4174 01.06 NOK 719.60 Klarna*clasohlson.com no Kurs: 1.0000",
+      "VARER 06.03 CLAS OHL 2832 \u00d8STRE ROSTEN TILLER",
+      "VARER 28.11 CLAS OHL 2832 \u00d8STRE ROSTEN TILLER"
+    ],
+    "key_terms": [
+      "09.04",
+      "3?33.10?34kl.",
+      "dato",
+      "rosten",
+      "vii's",
+      "1?33024?34klarna:clasohlson.com",
+      "015?00visa?3100000000000?32054570002287828726507675113?33069?34cl,",
+      "899.80",
+      "07.07",
+      "29.01"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 98",
+    "description_examples": [
+      "015?00VISA?3100000000000?32054793382238001972415850112?33952?34NO, K 1062,43 Mouser Electron",
+      "VISA VARE *4174 07.06 NOK 1413.26 Mouser Electronics Kurs: 1.0000",
+      "048?00DEBIT CARD TRANS?3170010078581?3205479338203300166968585311, 2?33503?34NOK 741,25 Mouser Electroni",
+      "015?00VISA?3100000000000?32054793382304310021485858113?33094?34NO, K 4832,98 Mouser Electron",
+      "015?00VISA?3100000000000?32054793382311412140445853113?33118?34NO, K 4832,98 Mouser Electron"
+    ],
+    "key_terms": [
+      "015?00visa?3100000000000?32054793382271001596575855113?33043?34no,",
+      "1062,43",
+      "015?00visa?3100000000000?32054793382192307077265858112?33839?34no,",
+      "916,88",
+      "1020,43",
+      "03.09",
+      "mouser",
+      "14.05",
+      "2?33585?34nok",
+      "k"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 480",
+    "description_examples": [
+      "D 60,00 OPENAI :CHATGPT S?35VALUTAKURS:    11,0338",
+      "VISA VARE *2699 13.09 USD 25.00 OPENAI *CHATGPT SUBSCR Kurs: 11.0976",
+      "VISA VARE *2699 13.03 USD 25.00 OPENAI *CHATGPT SUBSCR Kurs: 10.9320",
+      "VISA VARE *4174 19.02 USD 25.00 CHATGPT SUBSCRIPTION Kurs: 10.8028",
+      "D 120,00 OPENAI :CHATGPT?35VALUTAKURS:    11,4329"
+    ],
+    "key_terms": [
+      "11.0564",
+      "120,00",
+      "11,0338",
+      "13.01",
+      "11,5273",
+      "11,0990",
+      "19.02",
+      "11,5296",
+      "11,4157",
+      "12.03"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 71",
+    "description_examples": [
+      "048?00DEBIT CARD TRANS?3170010078581?3205457000210881082196070946, 6?33709?34DAGENS NARINGSL",
+      "048?00DEBIT CARD TRANS?3170010078581?3205457000204980491932563846, 6?33491?34DAGENS NARINGSL",
+      "048?00DEBIT CARD TRANS?3170010078581?3205457000201880181711537346, 6?33422?34DAGENS NARINGSL",
+      "048?00DEBIT CARD TRANS?3170010078581?3205457000219981992491655946, 7?33159?34DAGENS NARINGSL",
+      "048?00DEBIT CARD TRANS?3170010078581?3205457000213881382881434546, 6?33865?34DAGENS NARINGSL"
+    ],
+    "key_terms": [
+      "trans?3170010078581?3205457000210881082196070946,",
+      "naringsl",
+      "trans?3170010078581?3205457000201880181711537346,",
+      "3?33452?34dagens",
+      "7?33159?34dagens",
+      "trans?3170010078581?3205457000207780772124962846,",
+      "6?33015?34dagens",
+      "6?33422?34dagens",
+      "834",
+      "trans?3170010078581?3205457000204980491932563846,"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 700",
+    "description_examples": [
+      "VISA VARE *0345 05.02 SEK 151.00 Max Burgers 2010106 Drive Kurs: 1.0522",
+      "VISA VARE *0345 28.02 SEK 130.00 Max Burgers 2010106 Drive Kurs: 1.0732",
+      "VISA VARE *0345 06.03 SEK 115.00 Max Burgers 2010106 Drive Kurs: 1.0967",
+      "VISA VARE *0345 16.02 SEK 151.00 Max Burgers 2010106 Drive Kurs: 1.0683",
+      "VISA VARE *9451 22.06 NOK 194.00 Max Burgers 7010203 Kiosk Kurs: 1.0000"
+    ],
+    "key_terms": [
+      "1.0712",
+      "7010203",
+      "1.0715",
+      "135.00",
+      "1.1007",
+      "2010106",
+      "195.00",
+      "15.06",
+      "01.03",
+      "1.0732"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 457",
+    "description_examples": [
+      "VISA VARE *2699 09.04 USD 3226.50 NEUTRONICSE Kurs: 11.2397",
+      "VISA VARE *2699 05.11 USD 329.95 UCTRONICS Kurs: 11.2683",
+      "VISA VARE *4174 28.04 USD 450.92 PAYPAL *UCTRONICS Kurs: 10.9077",
+      "VISA VARE *4174 19.04 USD 329.95 UCTRONICS Kurs: 11.2844",
+      "VISA VARE *4174 18.09 USD 329.95 PAYPAL *UCTRO44GQ Kurs: 11.0303"
+    ],
+    "key_terms": [
+      "09.04",
+      "uctronics",
+      "11.0303",
+      "05.11",
+      "paypal",
+      "28.04",
+      "3226.50",
+      "329.95",
+      "11.2397",
+      "11.2683"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 76",
+    "description_examples": [
+      "048?00DEBIT CARD TRANS?3170010078581?3205454109202204960871690746, 6?33432?34LOWELL NORGE AS",
+      "048?00DEBIT CARD TRANS?3170010078581?3205498750219701304628013046, 7?33152?34Foodora Norway",
+      "VISA VARE *4174 08.01 NOK 868.00 Foodora Norway Kurs: 1.0000",
+      "015?00VISA?3100000000000?32054987502260011873440134113?33017?34Fo, odora Norway",
+      "VISA VARE *2699 30.10 NOK 903.00 Foodora Norway Kurs: 1.0000"
+    ],
+    "key_terms": [
+      "trans?3170010078581?3205498750219033339636013546,",
+      "trans?3170010078581?3205498750202500487026585746,",
+      "trans?3170010078581?3205498750220829327541013011,",
+      "015?00visa?3100000000000?32054987502224011298800131112?33919?34fo,",
+      "trans?3170010078581?3205498750205300523449585311,",
+      "015?00visa?3100000000000?32054987502250009274020135112?33988?34fo,",
+      "08.01",
+      "norge",
+      "6?33203?34foodora",
+      "trans?3170010078581?3205454109202204960871690746,"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 44",
+    "description_examples": [
+      "OVERF\u00d8RT Fra: POSTEN BRING AS Betalt: 23.01.24POSTEN BRING AS",
+      "OVERF\u00d8RT Fra: POSTEN BRING AS Betalt: 24.06.24Double paid for invoice 1180018301",
+      "VISA VARE *4174 29.05 NOK 472.00 POSTEN NORGE AS Kurs: 1.0000",
+      "OVERF\u00d8RT Fra: POSTEN BRING AS Betalt: 28.02.24POSTEN BRING AS",
+      "VISA VARE *4174 20.10 NOK 596.00 POSTEN NORGE AS Kurs: 1.0000"
+    ],
+    "key_terms": [
+      "023?00transfer?20tr239941218?3100000000035?32sumpost",
+      "invoice",
+      "darvoll",
+      "80259,",
+      "05.12.23posten",
+      "dato",
+      "54516.233",
+      "norge",
+      "betalt:",
+      "24.06.24double"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 687",
+    "description_examples": [
+      "VISA VARE *2699 21.11 NOK 12521.25 GLOBAL-E* PROGRESSIVER Kurs: 1.0000",
+      "VISA VARE *4174 13.05 NOK 6603.75 Global-e/ProgressiveRC Kurs: 1.0000",
+      "VISA VARE *4174 07.06 NOK 56.46 Global-e/ProgressiveRC Kurs: 1.0000",
+      "VISA VARE *2699 13.04 NOK 12311.25 Global-e/ProgressiveRC Kurs: 1.0000",
+      "VISA VARE *4174 13.05 NOK 545.00 Global-e/ProgressiveRC Kurs: 1.0000"
+    ],
+    "key_terms": [
+      "12521.25",
+      "21.11",
+      "13.04",
+      "12311.25",
+      "6603.75",
+      "*4174",
+      "global-e/progressiverc",
+      "1.0000",
+      "nok",
+      "global-e*"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 182",
+    "description_examples": [
+      "015?00VISA?3100000000000?32054830652257120003886970467?33393?34DE, 3 STUER EVER",
+      "015?00VISA?3100000000000?32054830652209120008507489467?33205?34DE, 3 STUER EVER",
+      "048?00DEBIT CARD TRANS?3170010078581?32ARK.REF .17032637   DATO 2, 2?33.11?34KL. 11.59 VERSJON 2 AUT. 46?35131 CAFE AKSEN  SLUPPENVE, IE",
+      "015?00VISA?3100000000000?32054830652264120004763294467?33414?34DE, 3 STUER EVER",
+      "048?00DEBIT CARD TRANS?3170010078581?32ARK.REF .17623549   DATO 0, 1?33.08?34KL. 11.41 VERSJON 1 AUT. 11?35DE 3 STUER EVER DRONNINGE, NS"
+    ],
+    "key_terms": [
+      "5?33.04?34kl.",
+      "11.48",
+      "11.54",
+      "08.01",
+      "04.07",
+      "6",
+      ".17126576",
+      ".17240069",
+      "sluppenve,",
+      "27.10"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 926",
+    "description_examples": [
+      "VISA VARE *0345 30.01 SEK 115.00 COME 2 EAT Kurs: 1.0505",
+      "VISA VARE *0345 13.02 SEK 59.00 CIRCLE K SALTSJOBADEN Kurs: 1.0595",
+      "VISA VARE *0345 10.04 SEK 1032.92 CIRCLE K UPPSALA BERBYLED Kurs: 1.1254",
+      "VISA VARE *0345 07.04 SEK 951.99 OKQ8 Kurs: 1.1185",
+      "VISA VARE *0345 09.03 SEK 132.00 COME 2 EAT Kurs: 1.1027"
+    ],
+    "key_terms": [
+      "okq8",
+      "uppsala",
+      "132.00",
+      "951.99",
+      "k",
+      "1.1027",
+      "come",
+      "1.0595",
+      "2",
+      "1.1254"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 506",
+    "description_examples": [
+      "K 480,00 CRIIPTO SUBSCRIP?35VALUTAKURS:     1,5877",
+      "K 480,00 CRIIPTO SUBSCRIP?35VALUTAKURS:     1,5564",
+      "K 482,39 CRIIPTO SUBSCRIP?35VALUTAKURS:     1,6382",
+      "K 5,62 CRIIPTO SUBSCRIPTI?35VALUTAKURS:     1,5569",
+      "K 482,39 CRIIPTO SUBSCRIP?35VALUTAKURS:     1,5516"
+    ],
+    "key_terms": [
+      "1,5845",
+      "482,39",
+      "2,70",
+      "1,6120",
+      "4,13",
+      "481,55",
+      "1,6021",
+      "480,00",
+      "k",
+      "criipto"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 12",
+    "description_examples": [
+      "043?00GIRO?20Fnr 586?3120955625138?3224 Lonnsom AS",
+      "OPPGAVE Til: 24 L\u00f8nnsom AS",
+      "023?00TRANSFER?20TR223428544?3100000000035?32SUMPOST",
+      "023?00TRANSFER?20TR184481190?3100000000035?32SUMPOST",
+      "043?00GIRO?3120955625138?3224 Lonnsom AS"
+    ],
+    "key_terms": [
+      "l\u00f8nnsom",
+      "043?00giro?3120955625138?3224",
+      "043?00giro?20tr386468919?3120955625138?3224",
+      "lonnsom",
+      "24",
+      "023?00transfer?20tr184481190?3100000000035?32sumpost",
+      "as24",
+      "043?00giro?20fnr",
+      "023?00transfer?20tr223428544?3100000000035?32sumpost",
+      "586?3120955625138?3224"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 78",
+    "description_examples": [
+      "048?00DEBIT CARD TRANS?3170010078581?3205431328223310089076320246, 7?33300?34USD 76,70 LINKEDIN-786:7331?35VALUTAKURS:    10,0320",
+      "048?00DEBIT CARD TRANS?3170010078581?3205431328132910065388223846, 6?33259?34USD 105,30 LINKEDIN-727:801?35VALUTAKURS:     9,1799",
+      "048?00DEBIT CARD TRANS?3170010078581?3205431328206910028245609146, 6?33561?34USD 29,33 LINKEDIN-741:2040?35VALUTAKURS:     9,1636",
+      "048?00DEBIT CARD TRANS?3170010078581?3205431328208110079290951846, 6?33634?34USD 58,41 LINKEDIN-745:1316?35VALUTAKURS:     8,9861",
+      "R 128,75 LinkedIn 1090770?35VALUTAKURS:    11,9606"
+    ],
+    "key_terms": [
+      "12,0728",
+      "11,6091",
+      "bf2308300080303bank",
+      "6?33125?34nok",
+      "1090770?35valutakurs:",
+      "trans?3170010078581?3205431328203110018106776246,",
+      "12,1378",
+      "5704,71",
+      "trans?3170010078581?3205431325132510042558744346,",
+      "6?33436?34usd"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 81",
+    "description_examples": [
+      "048?00DEBIT CARD TRANS?3170010078581?32ARK.REF .17122306   DATO 1, 1?33.10?34KL. 12.03 VERSJON 2 AUT. 46?35IKEA LEANGEN HF LANDBRUKS, VE",
+      "048?00DEBIT CARD TRANS?3170010078581?32ARK.REF .17917665   DATO 1, 4?33.06?34KL. 19.14 VERSJON 1 AUT. 11?35IKEA LEANGEN HF LANDBRUKS, VE",
+      "VARER 10.04 IKEA LEANGEN HF LANDBRUKSVEI TRONDHEIM",
+      "EA AS ECOMM",
+      "VISA VARE *2699 13.09 NOK 1309.00 IKEA AS ECOMM Kurs: 1.0000"
+    ],
+    "key_terms": [
+      "716.00",
+      "1,",
+      "landbruks,",
+      ".17917665",
+      "ikea",
+      "0,",
+      "ve",
+      "dato",
+      "ea",
+      "2"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 156",
+    "description_examples": [
+      "048?00DEBIT CARD TRANS?3170010078581?32ARK.REF .17696010   DATO 3, 1?33.08?34KL. 07.56 VERSJON 1 AUT. 11?35JULA TILLER IVAR LYKKESV, TI",
+      "VARER 17.01 JULA TILLER IVAR LYKKESV TILLER",
+      "015?00VISA?3100000000000?32054987503013002929288724113?33236?34JU, LA NORGE AS 624",
+      "048?00DEBIT CARD TRANS?3170010078581?32ARK.REF .17647815   DATO 3, 1?33.08?34KL. 07.41 VERSJON 1 AUT. 11?35JULA TILLER IVAR LYKKESV, TI",
+      "VARER 13.01 JULA TRONDHEIM  HAAKON VII'S TRONDHEIM"
+    ],
+    "key_terms": [
+      "1?33.08?34kl.",
+      "vi,",
+      "tiller",
+      "624",
+      "09.14",
+      "09.08",
+      "dato",
+      "haakon",
+      "015?00visa?3100000000000?32054987503013002929288724113?33236?34ju,",
+      "01.03"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 632",
+    "description_examples": [
+      "043?00GIRO?20TR432648173?3115066262666?32Aviant As",
+      "043?00GIRO?20TR423537786?3115066262666?32Aviant As",
+      "043?00GIRO?20TR439604157?3115066262666?32Aviant As",
+      "043?00GIRO?20TR449173076?3115066262666?32Aviant As",
+      "043?00GIRO?20TR390365739?3115066262666?32Aviant As"
+    ],
+    "key_terms": [
+      "043?00giro?20tr442206726?3142023200249?32sintef",
+      "043?00giro?20tr439604157?3115066262666?32aviant",
+      "043?00giro?20tr390365739?3115066262666?32aviant",
+      "043?00giro?20tr423537786?3115066262666?32aviant",
+      "043?00giro?20tr441011375?3115066262666?32aviant",
+      "043?00giro?20tr457821033?3115066262666?32aviant",
+      "043?00giro?20tr460782670?3115066262666?32aviant",
+      "043?00giro?20tr435615060?3115066262666?32aviant",
+      "043?00giro?20tr449173076?3115066262666?32aviant",
+      "043?00giro?3115066262666?32aviant"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 196",
+    "description_examples": [
+      "D 10,90 UBER :TRIP HELP.U?35VALUTAKURS:    10,6752",
+      "D 54,99 UBER :TRIP HELP.U?35VALUTAKURS:    11,3186",
+      "D 30,09 UBER :TRIP HELP.U?35VALUTAKURS:    11,2934",
+      "D 11,95 UBER :TRIP HELP.U?35VALUTAKURS:    11,3255",
+      "D 47,41 UBER :TRIP HELP.U?35VALUTAKURS:    11,1531"
+    ],
+    "key_terms": [
+      "6?33600?34usd",
+      "12,0328",
+      "6?33580?34usd",
+      "6?33609?34usd",
+      "5,95",
+      "9,2221",
+      "help.ub?35valutakurs:",
+      "9,62",
+      "trans?3170010078581?3205498750207400158812494746,",
+      "trans?3170010078581?3205498750207700964581585946,"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 329",
+    "description_examples": [
+      "015?00VISA?3100000000000?32054456392224110000417552112?33915?34BU, NNPRIS NIDARVOLL",
+      "VARER 19.09 BUNNPRIS & GOUR NIDARVOLL TRONDHEIM",
+      "VARER 31.10 BUNNPRIS & GOUR NIDARVOLL TRONDHEIM",
+      "NNPRIS NIDARVOLL",
+      "VARER 02.09 BUNNPRIS & GOUR NIDARVOLL TRONDHEIM"
+    ],
+    "key_terms": [
+      "09.04",
+      "nidarvoll",
+      "lade",
+      "01.11",
+      "02.11",
+      "tiller",
+      "thorvald",
+      "31.10",
+      "01.03",
+      "&"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 141",
+    "description_examples": [
+      "048?00DEBIT CARD TRANS?3170010078581?32ARK.REF .17173059   DATO 1, 1?33.04?34KL. 14.38 VERSJON 1 AUT. 11?35OBS BYGG LEANGE TUNGAVEGE, N",
+      "VISA VARE *4174 24.06 NOK 3081.40 E HANDEL OBS BYGG TILLER Kurs: 1.0000",
+      "VARER 09.10 OBS BYGG LEANGE TUNGAVEGEN 2 TRONDHEIM",
+      "048?00DEBIT CARD TRANS?3170010078581?32ARK.REF .17855770   DATO 1, 1?33.04?34KL. 14.05 VERSJON 1 AUT. 11?35OBS BYGG LEANGE TUNGAVEGE, N",
+      "048?00DEBIT CARD TRANS?3170010078581?32ARK.REF .17333701   DATO 1, 0?33.02?34KL. 17.11 VERSJON 2 AUT. 46?35OBS BYGG LEANGE TUNGAVEGE, N"
+    ],
+    "key_terms": [
+      "1,",
+      "09.04",
+      "11?35obs",
+      "015?00visa?3100000000000?32054463663020530210051480113?33252?34ob,",
+      ".17855770",
+      "17.02",
+      "0,",
+      "tiller",
+      "14.05",
+      ".17177118"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 440",
+    "description_examples": [
+      "FTHANSA.C 2202223709493",
+      "VISA VARE *9451 20.09 NOK 1930.00 LUFTHANSA.C 2204080008619 Kurs: 1.0000",
+      "VISA VARE *9451 10.09 EUR 180.00 LUFTHANSA   2204029802502 Kurs: 12.2293",
+      "VISA VARE *9451 10.09 EUR 180.00 LUFTHANSA   2204029802504 Kurs: 12.2293",
+      "VISA VARE *0345 30.08 NOK 8625.00 LUFTHANSA.C 2202211712737 Kurs: 1.0000"
+    ],
+    "key_terms": [
+      "30.08",
+      "2204029802504",
+      "20.09",
+      "lufthansa.c",
+      "5475.00",
+      "2204029802499",
+      "180.00",
+      "15.03",
+      "*9451",
+      "2204029802502"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 165",
+    "description_examples": [
+      "VARER 03.10 UNO-X ULLVAREN   NAMSOS",
+      "VARER 12.09 UNO-X SLUPPEN 0  TRONDHEIM",
+      "VARER 03.03 UNO-X LILLEHAMM  LILLEHAMMER",
+      "048?00DEBIT CARD TRANS?3170010078581?3205457000208370831069990411, 0?33922?34UNO-X SLUPPEN 0781",
+      "VARER 18.01 UNO-X SLUPPEN 0  TRONDHEIM"
+    ],
+    "key_terms": [
+      "03.09",
+      "dato",
+      "1?33037?34uno-x",
+      "syd",
+      "11.54",
+      "13.01",
+      "uno-x",
+      "city",
+      "11.10",
+      ".17640534"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 110",
+    "description_examples": [
+      "K 1160,62 HOTELSCOM728339",
+      "048?00DEBIT CARD TRANS?3170010078581?3205427984205610009767676646, 6?33504?34NOK 840,00 HOTELSCOM9165488",
+      "VISA VARE *9451 05.09 USD 100.37 HOTELCOM72058122458577 Kurs: 10.9540",
+      "048?00DEBIT CARD TRANS?3170010078581?3205469216217410027608918146, 7?33040?34USD 143,19 HOTELSCOM7233123?35VALUTAKURS:    10,2011",
+      "R 130,00 UZR:Hotel Montre?35VALUTAKURS:    11,8754"
+    ],
+    "key_terms": [
+      "hotelscom917343",
+      "8786,36",
+      "hotelscom916548",
+      "3996.00",
+      "6?33494?34nok",
+      "6127.69",
+      "hotelcom73037398939062",
+      "11,4328",
+      "trans?3170010078581?3205431325132810073054442546,",
+      "hotelscom728339"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 416",
+    "description_examples": [
+      "VISA VARE *2699 25.03 USD 3199.62 MAD-MOTOR Kurs: 10.8357",
+      "VISA VARE *2699 11.12 USD 617.12 MAD-MOTOR Kurs: 11.4079",
+      "VISA VARE *2699 04.04 USD 1117.50 MAD-MOTOR Kurs: 10.6717",
+      "VISA VARE *4174 05.06 USD 517.85 MAD-MOTOR Kurs: 10.8109",
+      "VISA VARE *4174 31.08 USD 1584.48 PAYPAL *JULI9ME4 Kurs: 10.8864"
+    ],
+    "key_terms": [
+      "05.03",
+      "179.75",
+      "1117.50",
+      "369.68",
+      "paypal",
+      "10.7928",
+      "mad-motor",
+      "11.2437",
+      "*gximaidejid",
+      "11.0943"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 50",
+    "description_examples": [
+      "D 982,53 ATLASSIAN?35VALUTAKURS:    10,7991",
+      "015?00VISA?20USD 18,47 ALIEXPRESS.COM 49?2125785856889514 VALUTAK, URS:?229,5360?3100000000000?32064163622136405626803784112?33597",
+      "048?00DEBIT CARD TRANS?3170010078581?3205460905115500000170631246, 5?33778?34USD 7,56 ATLASSIAN?35VALUTAKURS:     8,5727",
+      "015?00VISA?3100000000000?32054609052338000002744385467?33563?34US, D 562,45 ATLASSIAN?35VALUTAKURS:    10,0612",
+      "D 1182,38 ATLASSIAN?35VALUTAKURS:    11,2381"
+    ],
+    "key_terms": [
+      "203,13",
+      "93,70",
+      "urs:?228,4990?3100000000000?32064143611321002926304788466?33221",
+      "atlassian?35valutakurs:",
+      "10,9704",
+      "11,3364",
+      "6?33466?34usd",
+      "valuta,",
+      "1182,38",
+      "paypal"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 607",
+    "description_examples": [
+      "D 1684,99 APF:300 Block L?35VALUTAKURS:    10,7992",
+      "D 1684,99 APF:300 Block L?35VALUTAKURS:    11,2588",
+      "D 1684,99 APF:300 Block L?35VALUTAKURS:    11,4212",
+      "D 1684,99 APF:300 Block L?35VALUTAKURS:    11,6581",
+      "D 2815,64 APF:300 Block L?35VALUTAKURS:    10,9350"
+    ],
+    "key_terms": [
+      "11,4212",
+      "11,6581",
+      "llc?35valutakurs:",
+      "d",
+      "11,6843",
+      "l?35valutakurs:",
+      "11,3609",
+      "1727,42",
+      "509,99",
+      "2815,64"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 298",
+    "description_examples": [
+      "OPPGAVE Til: 4213.42.39535",
+      "OPPGAVE Til: 4213.40.11216",
+      "VARER 08.10 SHELL BILBYN BRATSBERGVEG TRONDHEIM",
+      "OPPGAVE Til: 4213.40.11216Aviant AS",
+      "VARER 17.09 SHELL V\u00c6RNES LUFTHAVNVEIE STJ\u00d8RDAL"
+    ],
+    "key_terms": [
+      "1,",
+      "46?35shell",
+      "bilbyn",
+      "09.04",
+      "bratsbergveg,",
+      "4213.42.3953542134239535",
+      "gudbrandsdal",
+      "0?33.06?34kl.",
+      "dato",
+      "4213.42.39527aviant"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 80",
+    "description_examples": [
+      "015?00VISA?3100000000000?32054609052247000004166835467?33361?34EU, R 224,69 SLACK TSDAP1L84?35VALUTAKURS:    10,2420",
+      "R 203,06 SLACK TSDAP1L84?35VALUTAKURS:    11,5964",
+      "R 285,72 SLACK TSDAP1L84?35VALUTAKURS:    11,9912",
+      "R 256,02 SLACK TSDAP1L84?35VALUTAKURS:    11,7244",
+      "R 198,81 SLACK TSDAP1L84?35VALUTAKURS:    12,1398"
+    ],
+    "key_terms": [
+      "209,55",
+      "11,9101",
+      "222,21",
+      "trans?3170010078581?3205460905218500000451888046,",
+      "10,2366",
+      "015?00visa?3100000000000?32054609052338000003168279467?33564?34eu,",
+      "trans?3170010078581?3205460905221600000459681446,",
+      "11,6737",
+      "225,94",
+      "12,2455"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 498",
+    "description_examples": [
+      "VISA VARE *2699 20.09 USD 401.54 JLCPCB Kurs: 10.8693",
+      "VISA VARE *2699 01.04 USD 736.60 JLCPCB Kurs: 10.7898",
+      "VISA VARE *2699 28.11 USD 332.28 JLCPCB Kurs: 11.4237",
+      "VISA VARE *4174 27.07 USD 28.36 JLCPCB.COM Kurs: 10.3861",
+      "VISA VARE *3646 26.12 USD 685.32 JLCPCB Kurs: 11.6509"
+    ],
+    "key_terms": [
+      "05.10",
+      "11.2622",
+      "11.0060",
+      "*3646",
+      "10.7898",
+      "20.09",
+      "685.32",
+      "11.2644",
+      "38.00",
+      "10.9363"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 70",
+    "description_examples": [
+      "OPPGAVE Til: Sluppen & Partners AS",
+      "043?00GIRO?20TR435939944?3181013341346?32Sluppen . Partners AS",
+      "OPPGAVE Til: Sluppen & Partners ASSluppen & Partners AS",
+      "OPPGAVE Til: SLUPPEN & PARTNERS AS",
+      "023?00TRANSFER?20TR242216170?3100000000035?32SUMPOST"
+    ],
+    "key_terms": [
+      "assluppen",
+      "023?00transfer?20tr242216170?3100000000035?32sumpost",
+      "partners",
+      ".",
+      "043?00giro?20tr435939944?3181013341346?32sluppen",
+      "043?00giro?20tr429645069?3181013341346?32sluppen",
+      "043?00giro?3181013341346?32sluppen",
+      "sluppen",
+      "043?00giro?20tr429645073?3181013341346?32sluppen",
+      "&"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 344",
+    "description_examples": [
+      "OVERF\u00d8RT Til: Theodor Hoem Betalt: 01.08.24Theodor Hoem",
+      "023?00TRANSFER?3142306093139?32Theodor Hoem",
+      "OVERF\u00d8RT Til: Theodor Hoem Betalt: 29.12.23Theodor Hoem",
+      "OVERF\u00d8RT Til: Theodor Hoem Betalt: 01.12.23Theodor Hoem",
+      "023?00TRANSFER?3136311541018?32Thea Fossum"
+    ],
+    "key_terms": [
+      "hoem",
+      "023?00transfer?3142306093139?32theodor",
+      "29.12.23theodor",
+      "01.12.23theodor",
+      "023?00transfer?3136311541018?32thea",
+      "01.03.24theodor",
+      "betalt:",
+      "01.08.24theodor",
+      "03.06.24theodor",
+      "hoemtheodor"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 6",
+    "description_examples": [
+      "R 281,77 GOOGLE:GSUITE AV?35VALUTAKURS:    12,1252",
+      "048?00DEBIT CARD TRANS?3170010078581?3205498750212101385832585946, 6?33770?34EUR 150,80 Google GSUITE.av?35VALUTAKURS:    10,1192",
+      "R 252,83 Google GSUITE.av?35VALUTAKURS:    11,5402",
+      "K 259,00 Google One",
+      "R 256,68 GOOGLE:GSUITE AV?35VALUTAKURS:    11,5719"
+    ],
+    "key_terms": [
+      "trans?3170010078581?3205469769115492001739873846,",
+      "243,09",
+      "trans?3170010078581?3205431325212810008866540046,",
+      "208,00",
+      "storage",
+      "227,70",
+      "trans?3170010078581?3205498750130537674806872846,",
+      "10,5075",
+      "015?00visa?3100000000000?32054987502274011052465856467?33442?34eu,",
+      "271,99"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 652",
+    "description_examples": [
+      "GEBYR VAREKJ\u00d8P M/VISA                    20 TRANS(ER) TYPE 714",
+      "GEBYR VAREKJ\u00d8P                            1 TRANS(ER) TYPE 709",
+      "GEBYR VAREKJ\u00d8P                           18 TRANS(ER) TYPE 709",
+      "GEBYR VAREKJ\u00d8P M/VISA                    26 TRANS(ER) TYPE 714",
+      "GEBYR VAREKJ\u00d8P                           12 TRANS(ER) TYPE 709"
+    ],
+    "key_terms": [
+      "13",
+      "61",
+      "8",
+      "23",
+      "714",
+      "32",
+      "34",
+      "25",
+      "22",
+      "27"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 781",
+    "description_examples": [
+      "VISA VARE *0345 31.01 SEK 99.00 Elgiganten Vaermdoe Kurs: 1.0506",
+      "VISA VARE *0345 22.02 SEK 2990.00 Elgiganten Vaermdoe Kurs: 1.0761",
+      "VISA VARE *0345 28.03 SEK 249.00 Elgiganten Vaermdoe Kurs: 1.0824",
+      "VISA VARE *0345 28.03 SEK 249.00 Elgiganten Vaermdoe Kurs: 1.0151",
+      "VISA VARE *0345 03.01 SEK 469.00 Elgiganten Vaermdoe Kurs: 1.0526"
+    ],
+    "key_terms": [
+      "1.0151",
+      "379.00",
+      "1.0715",
+      "31.01",
+      "238.00",
+      "1.0824",
+      "vaermdoe",
+      "1.1028",
+      "249.00",
+      "elgiganten"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 698",
+    "description_examples": [
+      "VISA VARE *0345 05.03 SEK 1000.04 ST1 GUSTAVSBERG MOLNVIK Kurs: 1.0968",
+      "VISA VARE *0345 16.02 SEK 800.43 ST1 GUSTAVSBERG MOLNVIK Kurs: 1.0684",
+      "VISA VARE *0345 15.03 SEK 1130.25 ST1 GUSTAVSBERG MOLNVIK Kurs: 1.0794",
+      "VISA VARE *0345 30.03 SEK 1085.47 ST1 GUSTAVSBERG MOLNVIK Kurs: 1.0801",
+      "VISA VARE *0345 17.01 SEK 499.65 ST1 GUSTAVSBERG MOLNVIK Kurs: 1.0496"
+    ],
+    "key_terms": [
+      "1000.04",
+      "1.0968",
+      "05.03",
+      "05.01",
+      "499.65",
+      "gustavsberg",
+      "1.0594",
+      "1085.47",
+      "st1",
+      "15.03"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 599",
+    "description_examples": [
+      "VISA VARE *2699 11.10 USD 1186.00 PAYPAL *NEUTRONICSE Kurs: 11.1687",
+      "VISA VARE *2699 02.12 USD 1186.00 PAYPAL *NEUTRONICSE Kurs: 11.4165",
+      "VISA VARE *2699 28.03 USD 2053.00 NEUTRONICSE Kurs: 10.8410",
+      "VISA VARE *2699 05.03 USD 799.90 PAYPAL *BENRUIGQXCE Kurs: 11.4749",
+      "VISA VARE *2699 24.10 NOK 26915.41 PAYPAL *NEUTRONICSE Kurs: 1.0000"
+    ],
+    "key_terms": [
+      "05.03",
+      "11.4749",
+      "paypal",
+      "*benruigqxce",
+      "usd",
+      "26915.41",
+      "799.90",
+      "1186.00",
+      "24.10",
+      "*neutronicse"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 668",
+    "description_examples": [
+      "ttb?34April 2023?35for foretak 00925542032",
+      "ttb?34Juli 2023?35for foretak 00925542032",
+      "ttb?34Juli 2024?35for foretak 00925396648",
+      "ttb?34Mai 2024?35for foretak 00925396648",
+      "ttb?34April 2023?35for foretak 00925396648"
+    ],
+    "key_terms": [
+      "ttb?34februar",
+      "ttb?34mai",
+      "2024?35for",
+      "foretak",
+      "ttb?34september",
+      "ttb?34juni",
+      "ttb?34november",
+      "2023?35for",
+      "ttb?34august",
+      "ttb?34april"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 154",
+    "description_examples": [
+      "D 15,00 WEBFLOW.COM?35VALUTAKURS:    10,7706",
+      "D 48,52 JLCPCB.COM?35VALUTAKURS:    10,4033",
+      "D 21,00 USCUSTOMS ESTA AP?35VALUTAKURS:    10,9914",
+      "D 22,50 WEBFLOW.COM?35VALUTAKURS:    10,9102",
+      "015?00VISA?3100000000000?32054492162264000016379343467?33409?34US, D 7,16 NAME-CHEAP.COM: 9X?35VALUTAKURS:    10,6229"
+    ],
+    "key_terms": [
+      "015?00visa?3100000000000?32054492162332000025389091467?33545?34us,",
+      "015?00visa?3100000000000?32054492162358000021998340467?33601?34us,",
+      "150,00",
+      "11,5012",
+      "015?00visa?3100000000000?32054492162356000025316764467?33599?34us,",
+      "10,8453",
+      "6?33762?34usd",
+      "11,0137",
+      "10,1901",
+      "9x?35valutakurs:"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 61",
+    "description_examples": [
+      "VISA VARE *4871 01.11 NOK 170.00 UPS Kurs: 1.0000",
+      "023?00TRANSFER?3190080640047?32Alf Auto AS",
+      "VISA VARE *4871 22.11 NOK 170.00 UPS Kurs: 1.0000",
+      "VISA VARE *4871 11.01 NOK 170.00 UPS Kurs: 1.0000",
+      "VISA VARE *4871 26.02 NOK 170.00 UPS Kurs: 1.0000"
+    ],
+    "key_terms": [
+      "177.00",
+      "01.11",
+      "norway",
+      "160.00",
+      "5?33964?34ups",
+      "*de",
+      "betalt:",
+      "05.06",
+      "023?00transfer?3136246706152?32ukjent",
+      "149.00"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 8",
+    "description_examples": [
+      "048?00DEBIT CARD TRANS?3170010078581?3205442342123213379021961346, 5?33963?34NOK 28883,47 PAYPAL :FOXTEC",
+      "c?34Telebank ref.: V76681?35USD             128,00",
+      "34Telebank ref.: V54091?35USD           5.328,25",
+      "34Telebank ref.: V33131?35USD           6.579,60",
+      "022?00FOREIGN TRANSFER?3170015941020?32FOXTECH HOBBY CO.,LIMITED?, 34Telebank ref.: V07511?35USD          19.716,64"
+    ],
+    "key_terms": [
+      "5?33783?34nok",
+      "v04621?35usd",
+      "ank",
+      "7.669,00",
+      "v76681?35usd",
+      "19.716,64",
+      "18.535,40",
+      "paypal",
+      "co.,limited?,",
+      "hobby"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 166",
+    "description_examples": [
+      "OPPGAVE Til: Trondheim Parkering ASTrondheim Parkering AS",
+      "048?00DEBIT CARD TRANS?3170010078581?3205445639208614000252241146, 6?33652?34TRONDHEIM PARKERING TICKE",
+      "OVERF\u00d8RT Fra: Trondheim Kommune",
+      "048?00DEBIT CARD TRANS?3170010078581?3205445639220211000823881646, 7?33181?34SMARTPARK TR. PARKERING",
+      "048?00DEBIT CARD TRANS?3170010078581?3205445639219611000780760146, 7?33139?34SMARTPARK TR. PARKERING"
+    ],
+    "key_terms": [
+      "7?33181?34smartpark",
+      "trans?3170010078581?3205445639219611000780936746,",
+      "trans?3170010078581?3205445639220411000824103246,",
+      "astrondheim",
+      "7?33126?34smartpark",
+      "6?33461?34trondheim",
+      "7?33122?34smartpark",
+      "trans?3170010078581?3205445639219111000801783346,",
+      "trans?3170010078581?3205445639219111000801749446,",
+      "trans?3170010078581?3205445639203214000159741946,"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 933",
+    "description_examples": [
+      "VISA VARE *0345 23.03 SEK 140.00 AUTOSPA GUSTAVSBERG Kurs: 1.0697",
+      "VISA VARE *0345 23.02 SEK 64.90 HEMKOP GUSTAVSBERG H Kurs: 1.0761",
+      "VISA VARE *0345 21.02 SEK 212.00 HEMKOP GUSTAVSBERG H Kurs: 1.0693",
+      "VISA VARE *0345 28.02 SEK 69.90 HEMKOP GUSTAVSBERG H Kurs: 1.0731",
+      "VISA VARE *0345 22.02 SEK 166.80 HEMKOP GUSTAVSBERG H Kurs: 1.0761"
+    ],
+    "key_terms": [
+      "13.03",
+      "1.0715",
+      "gustavsberg",
+      "23.02",
+      "140.00",
+      "109.80",
+      "91.80",
+      "hemkop",
+      "166.80",
+      "23.03"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 614",
+    "description_examples": [
+      "VISA VARE *9451 11.03 NOK 2923.00 ENTUR WEB Kurs: 1.0000",
+      "OPPGAVE Til: Entur ASEntur AS",
+      "VISA VARE *9451 05.09 NOK 1259.00 ENTUR WEB Kurs: 1.0000",
+      "VISA VARE *2699 20.02 NOK 1645.00 ENTUR WEB Kurs: 1.0000",
+      "OPPGAVE Til: EUROCARDEUROCARD"
+    ],
+    "key_terms": [
+      "2923.00",
+      "asentur",
+      "entur",
+      "05.09",
+      "*9451",
+      "11.12",
+      "1645.00",
+      "1.0000",
+      "20.02",
+      "web"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 625",
+    "description_examples": [
+      "VISA VARE *0345 14.03 SEK 658.50 BEIJER 146 Kurs: 1.0866",
+      "VISA VARE *0345 14.03 SEK 481.40 JULA SVERIGE AB 416 Kurs: 1.0866",
+      "VISA VARE *0345 02.02 SEK 129.00 JULA SVERIGE AB 416 Kurs: 1.0492",
+      "VARER 28.11 JULA TILLER IVAR LYKKESV TILLER",
+      "KREDITERING KORTHOLDER JULA TILLER TILLER"
+    ],
+    "key_terms": [
+      "79.90",
+      "146",
+      "beijer",
+      "129.00",
+      "379.00",
+      "1.0715",
+      "16.03",
+      "tiller",
+      "449.00",
+      "09.01"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 83",
+    "description_examples": [
+      "VISA VARE *9451 26.06 NOK 295.00 Zettle *Telepizza Kurs: 1.0000",
+      "VISA VARE *4174 18.06 NOK 2191.00 Elkjop.no Kurs: 1.0000",
+      "VARER 02.09 ELKJ\u00d8P LADE HAAKON VII'S TRONDHEIM",
+      "VISA VARE *2699 15.11 NOK 5495.00 Elkjop.no Kurs: 1.0000",
+      "OPPGAVE Til: Elkj\u00f8p Norge ASElkj\u00f8p Norge AS"
+    ],
+    "key_terms": [
+      "314.10",
+      "2191.00",
+      "10.10",
+      "1?33.08?34kl.",
+      "1,",
+      "lade",
+      "trans?3170010078581?3205498750204001335287585246,",
+      "16.13",
+      "tiller",
+      "3?33.10?34kl."
+    ]
+  },
+  {
+    "supplier_name": "Supplier 186",
+    "description_examples": [
+      "R 292,50 LastPass.com?35VALUTAKURS:    11,3622",
+      "R 292,50 LASTPASS.COM?35VALUTAKURS:    11,9730",
+      "048?00DEBIT CARD TRANS?3170010078581?3205431330217910050238058746, 7?33065?34EUR 39,96 GoToCom:LastPass?35VALUTAKURS:    10,7570",
+      "048?00DEBIT CARD TRANS?3170010078581?3205431330211310066201191446, 6?33747?34EUR 50,51 GoTo LastPass?35VALUTAKURS:     9,8883",
+      "R 24,00 NEXTGIS.COM?35VALUTAKURS:    11,7950"
+    ],
+    "key_terms": [
+      "trans?3170010078581?3205431330211310066201191446,",
+      "292,50",
+      "6?33536?34eur",
+      "nextgis.com?35valutakurs:",
+      "175,50",
+      "50,51",
+      "trans?3170010078581?3205431330206310039076884346,",
+      "39,96",
+      "11,7350",
+      "lastpass.com?35valutakurs:"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 74",
+    "description_examples": [
+      "VISA VARE *2699 14.03 NOK 1283.75 Dustin Norway AS Kurs: 1.0000",
+      "VISA VARE *4174 25.07 NOK 1993.00 Klarna*dustinhome.no Kurs: 1.0000",
+      "stin Norway AS",
+      "VISA VARE *4174 10.07 NOK 1491.00 Klarna*dustinhome.no Kurs: 1.0000",
+      "015?00VISA?3100000000000?32054987502160263225374948112?33752?34Du, stin Norway AS"
+    ],
+    "key_terms": [
+      "2?33501?34nok",
+      "1993.00",
+      "1598.00",
+      "1178,75",
+      "1491.00",
+      "norway",
+      "6?33290?34nok",
+      "stin",
+      "14.03",
+      "1480,00"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 22",
+    "description_examples": [
+      "048?00DEBIT CARD TRANS?3170010078581?3205487115214401008725931411, 2?33713?34Klarna:elefun.no",
+      "arna:elefun.no",
+      "VISA VARE *2699 14.03 NOK 3285.00 W*ELEFUN.NO Kurs: 1.0000",
+      "048?00DEBIT CARD TRANS?3170010078581?3205487115225201272838827846, 7?33375?34Klarna:elefun.no",
+      "048?00DEBIT CARD TRANS?3170010078581?3205487115128200457186524346, 6?33073?34Klarna elefun.no"
+    ],
+    "key_terms": [
+      "2219.00",
+      "30.08",
+      "01.07",
+      "03.09",
+      "439.00",
+      "trans?3170010078581?3205469769224691000131294246,",
+      "w*elefun.no",
+      "trans?3170010078581?3205487115227301330711654911,",
+      "5735.00",
+      "05.06"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 55",
+    "description_examples": [
+      "043?00GIRO?20Fnr 38131674551?3115039771818?32ARVATO FINANCE AS",
+      "OPPGAVE Til: FINN NO ASFINN NO AS",
+      "043?00GIRO?3115039771818?32ARVATO FINANCE AS",
+      "023?00TRANSFER?20TR209212752?3100000000035?32SUMPOST",
+      "NN NO AS"
+    ],
+    "key_terms": [
+      "finance",
+      "finn",
+      "38131674551?3115039771818?32arvato",
+      "043?00giro?3115039771818?32arvato",
+      "no",
+      "asfinn",
+      "043?00giro?20fnr",
+      "023?00transfer?20tr209212752?3100000000035?32sumpost",
+      "nn"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 120",
+    "description_examples": [
+      "lt",
+      "VISA VARE *2699 12.03 NOK 737.00 Wolt Kurs: 1.0000",
+      "VISA VARE *2699 28.11 NOK 648.10 Wolt Kurs: 1.0000",
+      "VISA VARE *4174 15.06 NOK 759.00 Wolt Kurs: 1.0000",
+      "VISA VARE *2699 05.09 NOK 1939.00 Wolt Kurs: 1.0000"
+    ],
+    "key_terms": [
+      "lt",
+      "trans?3170010078581?3205498750225201168392494746,",
+      "015?00visa?3100000000000?32054987502319009781604941467?33523?34wo,",
+      "619.20",
+      "norway",
+      "storage",
+      "015?00visa?3100000000000?32054987502312010274464949467?33512?34wo,",
+      "28.09",
+      "trans?3170010078581?3205498750217201234675494211,",
+      "trans?3170010078581?3205498750223601072111494246,"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 598",
+    "description_examples": [
+      "D 47,32 WALMART.COM 80092?35VALUTAKURS:    11,6696",
+      "D 106,65 WALMART.COM?35VALUTAKURS:    10,7867",
+      "D 136,24 WALMART.COM 8009?35VALUTAKURS:    10,9350",
+      "D 27,36 WALMART.COM?35VALUTAKURS:    10,9349",
+      "D 68,85 WALMART.COM?35VALUTAKURS:    10,7758"
+    ],
+    "key_terms": [
+      "8009?35valutakurs:",
+      "27,36",
+      "136,24",
+      "68,85",
+      "10,8456",
+      "d",
+      "10,9349",
+      "11,6696",
+      "10,8453",
+      "10,9704"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 97",
+    "description_examples": [
+      "048?00DEBIT CARD TRANS?3170010078581?3205498750203200000488672646, 6?33450?34NOK 510,00 Autodesk ADY",
+      "K 837,50 Autodesk Ireland",
+      "048?00DEBIT CARD TRANS?3170010078581?3205498750220800000436362511, 2?33865?34NOK 1070,00 Autodesk ADY",
+      "VISA VARE *4174 07.03 NOK 6995.00 Autodesk Ireland Operatio Kurs: 1.0000",
+      "048?00DEBIT CARD TRANS?3170010078581?3205498750200100000410775746, 6?33367?34NOK 510,00 Autodesk ADY"
+    ],
+    "key_terms": [
+      "dato",
+      "6?33450?34nok",
+      "6?33136?34nok",
+      "vii's",
+      "on",
+      "06.01",
+      "015?00visa?3100000000000?32054987502331000004297427467?33543?34no,",
+      "tr,",
+      "2?33651?34nok",
+      "10.03"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 56",
+    "description_examples": [
+      "OPPGAVE Til: Komplett Bedrift",
+      "048?00DEBIT CARD TRANS?3170010078581?3205454109221605395990706111, 2?33881?34KOMPLETTBEDRIFT.NO KCY68W",
+      "OPPGAVE Til: Tom Erik Holthe",
+      "VISA VARE *2699 20.11 NOK 990.00 KOMPLETT.NO 0XYVHX6I6FNL2 Kurs: 1.0000",
+      "048?00DEBIT CARD TRANS?3170010078581?3205454109205505018577095246, 6?33499?34KOMPLETTBEDRIFT.NO"
+    ],
+    "key_terms": [
+      "lrouv1",
+      "2?33647?34komplettbedrift.no",
+      "hhw58s9ib05m6",
+      "1298.25",
+      "trans?3170010078581?3205454109206805045395475411,",
+      "0xyvhx6i6fnl2",
+      "bedriftkomplett",
+      "trans?3170010078581?3205454109221605395990706111,",
+      "trans?3170010078581?3205454109206805045395471346,",
+      "2?33881?34komplettbedrift.no"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 24",
+    "description_examples": [
+      "048?00DEBIT CARD TRANS?3170010078581?3205446365120751208955505646, 5?33893?34GBP 324,78 3DXR?35VALUTAKURS:    12,5114",
+      "VISA VARE *4174 14.03 GBP 124.49 AE LTD Kurs: 13.7503",
+      "048?00DEBIT CARD TRANS?3170010078581?3205446365124752248252084946, 5?33981?34GBP 82,49 3DXR?35VALUTAKURS:    12,2787",
+      "048?00DEBIT CARD TRANS?3170010078581?3205446365122352224328011146, 5?33947?34GBP 107,82 3DXR?35VALUTAKURS:    12,7392",
+      "VISA VARE *4174 09.08 GBP 482.44 AE LTD Kurs: 13.4046"
+    ],
+    "key_terms": [
+      "14.4289",
+      "13.9152",
+      "120.08",
+      "trans?3170010078581?3205424469122013111710488946,",
+      "14.5731",
+      "01.07",
+      "234.53",
+      "20.09",
+      "12,1803",
+      "14.6089"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 164",
+    "description_examples": [
+      "VISA VARE *0068 23.02 USD 10.00 CALENDLY Kurs: 10.7310",
+      "VISA VARE *0068 23.07 USD 10.00 CALENDLY Kurs: 10.3110",
+      "048?00DEBIT CARD TRANS?3170010078581?3205401134226600003424156446, 7?33424?34USD 10,00 CALENDLY?35VALUTAKURS:    10,8760",
+      "VISA VARE *0068 23.03 USD 10.00 CALENDLY Kurs: 10.9970",
+      "D 10,00 CALENDLY?35VALUTAKURS:    11,1390"
+    ],
+    "key_terms": [
+      "23.07",
+      "10,0270",
+      "d",
+      "015?00visa?3100000000000?32054011342300000023639636467?33480?34us,",
+      "11,5792",
+      "6?33638?34usd",
+      "96,00",
+      "11,1390",
+      "10,2260",
+      "11,1160"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 858",
+    "description_examples": [
+      "ITED AIR  0164477914360",
+      "ITED AIR  0162411646156",
+      "ITED AIR  0164477443005",
+      "ITED AIR  0164476777884",
+      "ITED AIR  0162465477506"
+    ],
+    "key_terms": [
+      "0164477914360",
+      "air",
+      "ited",
+      "0164476777884",
+      "0162376149047",
+      "0162464759172",
+      "0164477443005",
+      "0162465477506",
+      "0162411646156"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 35",
+    "description_examples": [
+      "048?00DEBIT CARD TRANS?3170010078581?32ARK.REF .17690118   DATO 1, 2?33.04?34KL. 09.04 VERSJON 1 AUT. 11?35EXTRA NIDARVOLL LEIRFOSSV, EI",
+      "048?00DEBIT CARD TRANS?3170010078581?32ARK.REF .17647853   DATO 1, 9?33.05?34KL. 09.32 VERSJON 1 AUT. 11?35EXTRA NIDARVOLL LEIRFOSSV, EI",
+      "048?00DEBIT CARD TRANS?3170010078581?32ARK.REF .17458614   DATO 0, 5?33.09?34KL. 10.40 VERSJON 1 AUT. 46?35EXTRA NIDARVOLL LEIRFOSSV, EI",
+      "VARER 28.02 EXTRA NIDARVOLL LEIRFOSSVEIE TRONDHEIM",
+      "VARER 25.02 EXTRA NIDARVOLL LEIRFOSSVEIE TRONDHEIM"
+    ],
+    "key_terms": [
+      ".17948589",
+      "15.09",
+      "09.04",
+      "10.10",
+      ".17411637",
+      "5?33.09?34kl.",
+      "dato",
+      "bygg",
+      "trans?3170010078581?3205446366209152092448105311,",
+      "rosten"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 258",
+    "description_examples": [
+      "NETTGIRO Fra: Maria Steinsbekk Hveem Betalt: 09.08.23",
+      "015?00VISA?3100000000000?32054987502231012294358729467?33297?34Vi, pps:FLYTOGET AS",
+      "015?00VISA?3100000000000?32054987502232011013418722467?33299?34Vi, pps:Sabi Sushi Kvadrat",
+      "015?00VISA?3100000000000?32054987502230495407345850467?33293?34Vi, pps:FLYTOGET AS",
+      "MOBBNKGIR Fra: Maria Steinsbekk Hveem Betalt: 05.03.25"
+    ],
+    "key_terms": [
+      "015?00visa?3100000000000?32054987502231012294358729467?33297?34vi,",
+      "015?00visa?3100000000000?32054463662272552738282758467?33438?34fl,",
+      "09.08.23",
+      "6?33905?34flytoget",
+      "pps:sabi",
+      "vi",
+      "steinsbekk",
+      "hveem",
+      "05.03.25",
+      "015?00visa?3100000000000?32054987502230495407345850467?33293?34vi,"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 1",
+    "description_examples": [
+      "VISA VARE *4174 22.05 NOK 1203.00 Betaling i DHL Global Pay Kurs: 1.0000",
+      "048?00DEBIT CARD TRANS?3170010078581?3205498750122843890194755346, 5?33959?34DHL Express Norway AS",
+      "048?00DEBIT CARD TRANS?3170010078581?3205498750120100034416353646, 5?33882?34DHL Express Norway AS",
+      "048?00DEBIT CARD TRANS?3170010078581?3205498750118000026895754646, 5?33815?34DHL Express Norway AS",
+      "048?00DEBIT CARD TRANS?3170010078581?3205498750122300038076382146, 5?33946?34DHL Express Norway AS"
+    ],
+    "key_terms": [
+      "1447.00",
+      "trans?3170010078581?3205498750122843890194755346,",
+      "2366.00",
+      "norway",
+      "trans?3170010078581?3205498750114000413900873646,",
+      "1551.00",
+      "trans?3170010078581?3205498750120800038407725046,",
+      "023?00transfer?3197500700266?32dhl",
+      "dhl",
+      "5?33946?34dhl"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 27",
+    "description_examples": [
+      "VARER 22.11 KJELL & CO NO02 \u00d8STRE ROSTEN TILLER",
+      "VARER 06.05 KJELL & CO NO02 OLAV TRYGGVA TRONDHEIM",
+      "015?00VISA?3100000000000?32054383762297130003694951113?33079?34KJ, ELL . CO NO027-CITYSYD",
+      "015?00VISA?3100000000000?32054383762258110001436834113?33003?34KJ, ELL.COM/NO",
+      "VARER 17.01 KJELL & CO NO02 \u00d8STRE ROSTEN TILLER"
+    ],
+    "key_terms": [
+      "trans?3170010078581?3205438376119511000179924746,",
+      "5?33854?34kjell.com/no",
+      "&co",
+      "tiller",
+      "olav",
+      "ell.com/no",
+      "trans?3170010078581?3205438376127411000568241946,",
+      "2?33387?34kjell.com/no",
+      "ell",
+      "01.03"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 917",
+    "description_examples": [
+      "VISA VARE *0345 26.01 SEK 199.80 BILTEMA SWEDEN VERMDO Kurs: 1.0540",
+      "VISA VARE *0345 01.03 SEK 149.00 BILTEMA SWEDEN VERMDO Kurs: 1.0715",
+      "VISA VARE *0345 26.02 SEK 278.90 BILTEMA SWEDEN VERMDO Kurs: 1.0715",
+      "VISA VARE *0345 25.01 SEK 179.00 BILTEMA SWEDEN VERMDO Kurs: 1.0540",
+      "VISA VARE *0345 18.01 SEK 827.70 BILTEMA SWEDEN VERMDO Kurs: 1.0496"
+    ],
+    "key_terms": [
+      "biltema",
+      "vermdo",
+      "26.02",
+      "179.00",
+      "1.0715",
+      "*0345",
+      "1.0540",
+      "278.90",
+      "18.01",
+      "1.0496"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 21",
+    "description_examples": [
+      "VISA VARE *4174 03.08 NOK 914.16 DKC DIGI-KEY CORP Kurs: 1.0000",
+      "015?00VISA?3100000000000?32054192052217100978669154112?33889?34NO, K 501,70 DKC DIGI-KEY COR",
+      "VISA VARE *4174 07.11 NOK 3204.74 DKC DIGI-KEY CORP Kurs: 1.0000",
+      "015?00VISA?3100000000000?32054192052260107237037517113?33016?34NO, K 657,06 DKC DIGI-KEY COR",
+      "015?00VISA?3100000000000?32054192052201100493474062112?33856?34NO, K 259,94 DKC DIGI-KEY COR"
+    ],
+    "key_terms": [
+      "438,80",
+      "2?33709?34nok",
+      "01.11",
+      "2081.17",
+      "540,66",
+      "07.11",
+      "5?33852?34nok",
+      "paypal",
+      "015?00visa?3100000000000?32054192052336101490548229113?33176?34no,",
+      "04.10"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 436",
+    "description_examples": [
+      "OVFUTLAND LOOK DIGITAL DA BF2406200434003Look Digital Dariusz Czarnecki",
+      "OVFUTLAND LOOK DIGITAL DA BF2309200137903Look Digital Dariusz Czarnecki",
+      "OVFUTLAND LOOK DIGITAL DA BF2305080060003Look Digital Dariusz Czarnecki",
+      "OVFUTLAND LOOK DIGITAL DA BF2306300401003Look Digital Dariusz Czarnecki",
+      "OVFUTLAND LOOK DIGITAL DA BF2306090069703Look Digital Dariusz Czarnecki"
+    ],
+    "key_terms": [
+      "bf2306090069703look",
+      "bf2403190051703look",
+      "bf2411010060503look",
+      "bf2502250210003look",
+      "czarnecki",
+      "bf2306300401003look",
+      "k",
+      "paypal",
+      ":lookdig",
+      "bf2308220318203look"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 62",
+    "description_examples": [
+      "043?00GIRO?3160050608460?32GJENSIDIGE FORSIKRING ASA",
+      "042?00GIRO?3100000000000?32ARK.ID  8023909137.233 DATO?33 23.03",
+      "OPPGAVE Til: Gjensidige Forsikring ASAGjensidige Forsikring ASA",
+      "OPPGAVE Til: Gjensidige Forsikring ASA",
+      "023?00TRANSFER?20TR244885861?3100000000035?32SUMPOST"
+    ],
+    "key_terms": [
+      "043?00giro?3160050608460?32gjensidige",
+      "havard?3100000000000?32ark.id",
+      "forsikring",
+      "043?00giro?20fnr",
+      "rsikring",
+      "042?00giro?20korrigering",
+      "23.03",
+      "asagjensidige",
+      "8023909137.233",
+      "asa"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 170",
+    "description_examples": [
+      "VISA VARE *4174 18.01 NOK 981.00 POLYALKEMI Kurs: 1.0000",
+      "VISA VARE *4174 23.10 NOK 1923.00 POLYALKEMI Kurs: 1.0000",
+      "pps:polyalkemi.no eCom",
+      "048?00DEBIT CARD TRANS?3170010078581?3205457000213371332214599511, 2?33702?34DINTERO CHECKOUT",
+      "048?00DEBIT CARD TRANS?3170010078581?3205457000203570351235286411, 2?33502?34DINTERO CHECKOUT"
+    ],
+    "key_terms": [
+      "015?00visa?3100000000000?32054570002186718622254302112?33814?34di,",
+      "05.10",
+      "ntero",
+      "dinter*polyalkemi.no",
+      "18.01",
+      "524.00",
+      "2?33702?34dintero",
+      "trans?3170010078581?3205457000209870982578191711,",
+      "polyalkemi",
+      "2?33649?34dintero"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 224",
+    "description_examples": [
+      "048?00DEBIT CARD TRANS?3170010078581?3205459272210811668336402346, 6?33712?34NOK 371,34 KIWI.COM",
+      "K 1095,97 KIWI.COM",
+      "K 3988,00 KIWI.COM",
+      "K 928,99 KIWI.COM",
+      "K 6030,00 Kiwi.com"
+    ],
+    "key_terms": [
+      "trans?3170010078581?3205459272210811668336402346,",
+      "1095,97",
+      "928,99",
+      "trans?3170010078581?3205459272214412212100402946,",
+      "1728,56",
+      "6?33712?34nok",
+      "371,34",
+      "k",
+      "kiwi.com",
+      "6?33887?34nok"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 287",
+    "description_examples": [
+      "015?00VISA?3100000000000?32054541092166052635438517112?33759?34PR, OSHOP.NO",
+      "VISA VARE *2699 19.02 NOK 4440.84 PROSHOP.NO Kurs: 1.0000",
+      "VISA VARE *9451 12.12 NOK 2224.48 PROSHOP.NO Kurs: 1.0000",
+      "VISA VARE *2699 29.11 NOK 2983.25 PROSHOP.NO Kurs: 1.0000",
+      "VISA VARE *3646 16.09 NOK 3076.00 PROSHOP.NO Kurs: 1.0000"
+    ],
+    "key_terms": [
+      "2224.48",
+      "12.12",
+      "*9451",
+      "015?00visa?3100000000000?32054541092166052635438517112?33759?34pr,",
+      "oshop.no",
+      "1.0000",
+      "19.02",
+      "*3646",
+      "nok",
+      "3076.00"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 152",
+    "description_examples": [
+      "OPPGAVE Til: Vegamot ASVegamot AS",
+      "043?00GIRO?20TR386468921?3142134811611?32Vegamot AS",
+      "OPPGAVE Til: Vegamot AS",
+      "023?00TRANSFER?20TR237415447?3100000000035?32SUMPOST",
+      "043?00GIRO?3160750529340?32VEGAMOT AS"
+    ],
+    "key_terms": [
+      "043?00giro?3160750529340?32vegamot",
+      "043?00giro?20tr386468921?3142134811611?32vegamot",
+      "vegamot",
+      "023?00transfer?20tr237415447?3100000000035?32sumpost",
+      "asvegamot",
+      "023?00transfer?20tr234914204?3100000000035?32sumpost",
+      "023?00transfer?20tr237415445?3100000000035?32sumpost",
+      "043?00giro?20tr387537517?3142134811611?32vegamot",
+      "043?00giro?20tr429645066?3142134811611?32vegamot",
+      "023?00transfer?20tr237415452?3100000000035?32sumpost"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 369",
+    "description_examples": [
+      "015?00VISA?3100000000000?32054463662299582998717697467?33477?34SA, S AIRLINE 1172486093015",
+      "VISA VARE *9451 11.06 NOK 1068.00 SAS AIRLINE 1172521756565 Kurs: 1.0000",
+      "VISA VARE *9451 06.06 NOK 669.00 SAS AIRLINE 1172521624938 Kurs: 1.0000",
+      "VISA VARE *9451 11.06 NOK 669.00 SAS AIRLINE 1172521753798 Kurs: 1.0000",
+      "VISA VARE *0068 03.04 NOK 699.00 SAS AIRLINE 1174560543638 Kurs: 1.0000"
+    ],
+    "key_terms": [
+      "1174202875595",
+      "1172521624938",
+      "1172529338031",
+      "05.01",
+      "550.00",
+      "1174205686789",
+      "1172486093015",
+      "01.11",
+      "1172485715056",
+      "350.00"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 881",
+    "description_examples": [
+      "VISA VARE *3646 03.01 USD 56.69 POINT ONE NAVIGATION Kurs: 11.6580",
+      "VISA VARE *3646 15.11 USD 150.00 POINT ONE NAVIGATION Kurs: 11.4227",
+      "VISA VARE *3646 16.12 USD 150.00 POINT ONE NAVIGATION Kurs: 11.4385",
+      "VISA VARE *3646 15.01 USD 300.00 POINT ONE NAVIGATION Kurs: 11.6755",
+      "VISA VARE *3646 15.02 USD 300.00 POINT ONE NAVIGATION Kurs: 11.4031"
+    ],
+    "key_terms": [
+      "navigation",
+      "03.01",
+      "56.69",
+      "16.12",
+      "15.01",
+      "11.6580",
+      "11.4031",
+      "11.4227",
+      "11.6755",
+      "*3646"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 145",
+    "description_examples": [
+      "K 969,50 MSFT : E0500O5W8",
+      "K 2109,63 MSFT : E0500S1O",
+      "K 969,50 MSFT : E0500NRFF",
+      "K 1493,34 MSFT : E0500PR9",
+      "048?00DEBIT CARD TRANS?3170010078581?3205479631206300003988065946, 6?33531?34NOK 484,75 MSFT : E0500HVYM"
+    ],
+    "key_terms": [
+      "1837,37",
+      "microsoft:365",
+      "6?33690?34nok",
+      "1696,63",
+      "e0500pdn",
+      "015?00visa?3100000000000?32054796312312000000327754467?33510?34no,",
+      "e0500m5tp",
+      "trans?3170010078581?3205479631218900002865375146,",
+      "969,50",
+      "783,68"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 144",
+    "description_examples": [
+      "OVFUTLAND TEAMTAILOR AB F BF2406140095403ATeamtailor Ab Filial I Norge",
+      "OVFUTLAND TEAMTAILOR AB F BF2402020089603ATeamtailor Ab Filial I Norge",
+      ",00",
+      "022?00FOREIGN TRANSFER?3170015935063?32Teamtailor AB?34Telebank r, ef.: V72251?35SEK           4.058,00",
+      "022?00FOREIGN TRANSFER?3170015935063?32Marginalen Bank?34Telebank, ref.: V18768?35SEK          17.795,77"
+    ],
+    "key_terms": [
+      "v72251?35sek",
+      "v,",
+      "v04189?35sek",
+      "4.095,00",
+      "28267?35sek",
+      "v52299?35sek",
+      "teamtailor",
+      "transfer?3170015935063?32teamtailor",
+      "ef.:",
+      "filial"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 184",
+    "description_examples": [
+      "VISA VARE *2699 07.01 EUR 456.26 Eleshop B.V. Kurs: 11.9908",
+      "VISA VARE *4174 24.11 EUR 243.61 Eleshop B.V. Kurs: 12.0241",
+      "VISA VARE *4174 09.08 EUR 179.15 Eleshop B.V. Kurs: 11.4985",
+      "VISA VARE *4174 11.01 EUR 828.89 Eleshop B.V. Kurs: 11.6100",
+      "048?00DEBIT CARD TRANS?3170010078581?3205439557216700003297698711, 2?33769?34EUR 696,72 Eleshop B.V.?35VALUTAKURS:    10,7517"
+    ],
+    "key_terms": [
+      ":eleshop?35valutakurs:",
+      "b.v.",
+      "11.6100",
+      "24.11",
+      "0000000?32064395573045000066946345113?33311",
+      "852,85",
+      "09.08",
+      "2?33570?34eur",
+      "11.9908",
+      "eleshop"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 439",
+    "description_examples": [
+      "VISA VARE *4174 18.06 USD 2735.09 ARKELECTRON.COM Kurs: 10.9646",
+      "D 616,98 ARKELECTRON.COM?35VALUTAKURS:    10,9126",
+      "VISA VARE *4174 14.12 USD 1409.54 ARKELECTRON.COM Kurs: 11.2331",
+      "VISA VARE *2699 16.12 USD 1433.66 ARKELECTRON.COM Kurs: 11.4386",
+      "VISA VARE *4174 27.09 USD 1428.44 ARKELECTRON.COM Kurs: 11.1297"
+    ],
+    "key_terms": [
+      "d",
+      "1409.54",
+      "14.12",
+      "10,9126",
+      "arkelectron.com?35valutakurs:",
+      "1428.44",
+      "11.1297",
+      "usd",
+      "arkelectron.com",
+      "11.2331"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 220",
+    "description_examples": [
+      "TS:PIZZABAKEREN.NO",
+      "VARER 28.05 PIZZABAKEREN DO STORGATA 46  DOKKA",
+      "VISA VARE *2699 24.01 NOK 995.00 PIZZABAKEREN SLUPPEN Kurs: 1.0000",
+      "048?00DEBIT CARD TRANS?3170010078581?3205438376210211000288082211, 2?33655?34NETS:PIZZABAKEREN.NO",
+      "048?00DEBIT CARD TRANS?3170010078581?32ARK.REF .17259996   DATO 0, 1?33.01?34KL. 17.55 VERSJON 1 AUT. 46?35PIZZABAKEREN RASCHS VEI 4, T"
+    ],
+    "key_terms": [
+      "raschs",
+      "1,",
+      "vei",
+      ".17779044",
+      "02.11",
+      "1095.00",
+      "995.00",
+      "0,",
+      "dato",
+      "trans?3170010078581?3205438376210211000288082211,"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 217",
+    "description_examples": [
+      "023?00TRANSFER?3120955766319?32Anders",
+      "023?00TRANSFER?3160311416289?32Rendell",
+      "lin?33g Av Fa",
+      "OPPGAVE Til: Farnell Norge Norsk Avdeling Av FarFarnell Norge Norsk Avdeling Av Farnell Danmark As Norsk Avdeling Av Utenlandsk Foretak",
+      "023?00TRANSFER?3197600507668?32Farnell"
+    ],
+    "key_terms": [
+      "fa",
+      "lin?33g",
+      "023?00transfer?3160311416289?32rendell",
+      "norge",
+      "utenlandsk",
+      "foretak",
+      "norsk",
+      "farnell",
+      "av",
+      "023?00transfer?3120955766319?32anders"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 520",
+    "description_examples": [
+      "VISA VARE *4174 18.09 GBP 91.19 ACCULIMITED Kurs: 13.6457",
+      "VISA VARE *4174 04.09 GBP 97.95 ACCULIMITED Kurs: 13.8141",
+      "VISA VARE *2699 06.11 GBP 110.95 ACCULIMITED Kurs: 14.5918",
+      "VISA VARE *2699 20.01 GBP 448.95 ACCULIMITED Kurs: 14.2384",
+      "VISA VARE *2699 22.11 GBP 205.95 ACCULIMITED Kurs: 14.3282"
+    ],
+    "key_terms": [
+      "78.95",
+      "14.5918",
+      "110.95",
+      "205.95",
+      "13.8141",
+      "448.95",
+      "153.95",
+      "199.55",
+      "97.95",
+      "04.07"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 41",
+    "description_examples": [
+      "VISA VARE *2699 07.11 NOK 904.71 www.elfadistrelec.no Kurs: 1.0000",
+      "015?00VISA?3100000000000?32054007482214171404928128112?33878?34ww, w.elfadistrelec.no",
+      "048?00DEBIT CARD TRANS?3170010078581?3205400748120912724054112846, 5?33863?34www.elfadistrelec.no",
+      "048?00DEBIT CARD TRANS?3170010078581?3205400748206215175890137911, 2?33571?34www.elfadistrelec.no",
+      "015?00VISA?3100000000000?32054007482200169507711405112?33854?34ww, w.elfadistrelec.no"
+    ],
+    "key_terms": [
+      "015?00visa?3100000000000?32054007482209170734527094112?33870?34ww,",
+      "968.75",
+      "5?33894?34www.elfadistrelec.no",
+      "30.08",
+      "trans?3170010078581?3205400748218116691200524411,",
+      "015?00visa?3100000000000?32054007483019193590116685113?33247?34ww,",
+      "1405.14",
+      "015?00visa?3100000000000?32054007482200169507711405112?33854?34ww,",
+      "5?33863?34www.elfadistrelec.no",
+      "07.11"
+    ]
+  },
+  {
+    "supplier_name": "Supplier 429",
+    "description_examples": [
+      "VISA VARE *2699 17.01 NOK 2139.36 PAYPAL *STICKERAPP Kurs: 1.0000",
+      "VISA VARE *4174 14.12 NOK 3108.00 PRNT Printing Solutions A Kurs: 1.0000",
+      "K 1728,00 PRNT Printing S",
+      "K 1793,00 PRNT Printing S",
+      "VISA VARE *3646 11.12 NOK 1361.00 PRNT Printing Solutions A Kurs: 1.0000"
+    ],
+    "key_terms": [
+      "*3646",
+      "k",
+      "paypal",
+      "05.12",
+      "14.12",
+      "s",
+      "06.06",
+      "printing",
+      "so",
+      "solutions"
+    ]
+  }
+]
+
+UNMATCHED_TRANSACTIONS (Transactions needing classification):
+[
+  {
+    "id": 7520,
+    "description": "VISA VARE *0345 16.02 SEK 115.20 MAXI ICA STORMARKNAD VARM Kurs: 1.0683"
+  },
+  {
+    "id": 4198,
+    "description": "VISA VARE *4174 03.08 EUR 140.38 ALIEXPRESS Kurs: 10.9271"
+  },
+  {
+    "id": 8054,
+    "description": "OPPGAVE Til: Ice Communication Norge ASIce Communication Norge AS"
+  },
+  {
+    "id": 7269,
+    "description": "VARER 07.01 BILTEMA AVD 202 \u00d8STRE ROSTEN TILLER"
+  },
+  {
+    "id": 5862,
+    "description": "OPPGAVE Til: Nasjonal KommunikasjonsmyndighetNasjonal Kommunikasjonsmyndighet"
+  },
+  {
+    "id": 3848,
+    "description": "VISA VARE *4174 05.06 NOK 1191.23 RS COMPONENTS AS Kurs: 1.0000"
+  },
+  {
+    "id": 5546,
+    "description": "VISA VARE *4174 09.03 NOK 1654.50 Mouser Electronics Kurs: 1.0000"
+  },
+  {
+    "id": 7480,
+    "description": "VISA VARE *0345 05.02 SEK 115.00 Max Burgers 2010106 Drive Kurs: 1.0522"
+  },
+  {
+    "id": 7972,
+    "description": "OVFUTLAND JM AB           BF2504110128603AJm Ab"
+  },
+  {
+    "id": 7539,
+    "description": "RE AS: BID:1808849"
+  },
+  {
+    "id": 7085,
+    "description": "D 12,92 UBER :TRIP HELP.U?35VALUTAKURS:    11,3668"
+  },
+  {
+    "id": 6992,
+    "description": "VISA VARE *2699 22.11 USD 517.85 MAD-MOTOR Kurs: 11.3297"
+  },
+  {
+    "id": 5274,
+    "description": "OPPGAVE Fra: Aviant AS"
+  },
+  {
+    "id": 2924,
+    "description": "015?00VISA?3100000000000?32054609053004000003708307467?33621?34EU, R 187,89 SLACK TSDAP1L84?35VALUTAKURS:    10,9534"
+  },
+  {
+    "id": 7492,
+    "description": "VISA VARE *0345 08.02 SEK 104.90 STORA COOP VARMDO Kurs: 1.0612"
+  },
+  {
+    "id": 2395,
+    "description": "OPPGAVE Til: Trondheim N\u00e6ringspark AS"
+  },
+  {
+    "id": 6206,
+    "description": "VISA VARE *4174 10.07 USD 319.00 NEUTRONICSE Kurs: 10.8770"
+  },
+  {
+    "id": 6292,
+    "description": "ttb?34Juli 2024?35for foretak 00925542032"
+  },
+  {
+    "id": 7852,
+    "description": "VISA VARE *4871 26.03 NOK 170.00 UPS Kurs: 1.0000"
+  },
+  {
+    "id": 7837,
+    "description": "OPPGAVE Til: Sands Advokatfirma DASands Advokatfirma DA"
+  },
+  {
+    "id": 2011,
+    "description": "048?00DEBIT CARD TRANS?3170010078581?3205498750223300574609146646, 7?33301?34FINN NO AS"
+  },
+  {
+    "id": 7740,
+    "description": "OVFUTLAND VARMDO ELENTREP BF2503110078903AV\u00e4rmd\u00f6 Elentreprenader AB"
+  },
+  {
+    "id": 7113,
+    "description": "043?00GIRO?20TR424707861?3136062095851?32FRETHEIM NAVIGATION"
+  },
+  {
+    "id": 4118,
+    "description": "OPPGAVE Til: Komplett BedriftKomplett Bedrift"
+  },
+  {
+    "id": 4512,
+    "description": "VISA VARE *0068 23.09 USD 10.00 CALENDLY Kurs: 11.0970"
+  },
+  {
+    "id": 220,
+    "description": "043?00GIRO?3197500700266?32DHL EXPRESS (NORWAY) AS"
+  },
+  {
+    "id": 536,
+    "description": "023?00TRANSFER?3160750539826?32Dekorert AS"
+  },
+  {
+    "id": 7566,
+    "description": "VISA VARE *0345 21.02 SEK 150.00 OSSI BURGER Kurs: 1.0693"
+  },
+  {
+    "id": 7579,
+    "description": "K 10778,64 KIWI.COM"
+  },
+  {
+    "id": 6975,
+    "description": "ERICAN AIR0012192699399"
+  },
+  {
+    "id": 7056,
+    "description": "OPPGAVE Til: Oda Norway AS (B2B)Oda Norway AS (B2B)"
+  },
+  {
+    "id": 623,
+    "description": "022?00FOREIGN TRANSFER?3170015935055?32Teamtailor AB?34Telebank r, ef.: V64624?35SEK           7.313,00"
+  },
+  {
+    "id": 7383,
+    "description": "VISA VARE *2699 23.01 USD 1170.00 ARKELECTRON.COM Kurs: 10.9266"
+  },
+  {
+    "id": 2772,
+    "description": "022?00FOREIGN TRANSFER?20TR237415444?3170015941322?32HSBC HONG KO, NG?34Telebank ref.: U46554?35USD           1.078,50"
+  },
+  {
+    "id": 6180,
+    "description": "OVFUTLAND FRILANS FINANS  BF2407050092303AFrilans Finans Sverige AB"
+  },
+  {
+    "id": 1773,
+    "description": "048?00DEBIT CARD TRANS?3170010078581?3205460905220000000909727946, 7?33168?34UASNORWAY.NO"
+  },
+  {
+    "id": 3811,
+    "description": "VISA VARE *4174 31.05 USD 485.05 shop.mejzlik.eu Kurs: 11.5632"
+  },
+  {
+    "id": 7224,
+    "description": "83187566946468?33546"
+  },
+  {
+    "id": 6781,
+    "description": "K 4875,00 ALVA LABS AB?35VALUTAKURS:     1,0665"
+  },
+  {
+    "id": 1855,
+    "description": "015?00VISA?3100000000000?32054987502210000170250735467?33209?34NO, K 1095,00 Hotel at Bookin"
+  },
+  {
+    "id": 6490,
+    "description": "192054252106271255473468?33327"
+  },
+  {
+    "id": 6469,
+    "description": "OPPGAVE Til: Onepark ASOnepark AS"
+  },
+  {
+    "id": 4604,
+    "description": "OPPGAVE Til: Skatteetaten - SkatteinnkrevingSkatteetaten - Skatteinnkreving"
+  },
+  {
+    "id": 6680,
+    "description": "OPPGAVE Til: Air & Road Transport ASAir & Road Transport AS"
+  },
+  {
+    "id": 223,
+    "description": "043?00GIRO?20Parking ticket handicap?3115030825141?32ARVATO FINAN, CE AS"
+  },
+  {
+    "id": 4792,
+    "description": "VISA VARE *4174 01.11 NOK 630.00 CAKEITEASY.NO Kurs: 1.0000"
+  },
+  {
+    "id": 6358,
+    "description": "D 1,95 ICI:FEE SYRACU WEB?35VALUTAKURS:    10,9846"
+  },
+  {
+    "id": 6313,
+    "description": "D 20,00 APF:Sutton Real E?35VALUTAKURS:    11,2445"
+  },
+  {
+    "id": 849,
+    "description": "048?00DEBIT CARD TRANS?3170010078581?3205401134206000003055054546, 6?33517?34USD 54,69 DIGITALOCEAN.COM?35VALUTAKURS:     9,0950"
+  },
+  {
+    "id": 6240,
+    "description": "VARER 18.07 KOAN JERNBANETORG LILLEHAMMER"
+  },
+  {
+    "id": 5138,
+    "description": "OPPGAVE Til: JAN ERIK LANDR\u00d8JAN ERIK LANDR\u00d8"
+  },
+  {
+    "id": 3504,
+    "description": "OPPGAVE Til: Level 6 ASLevel 6 AS"
+  },
+  {
+    "id": 2441,
+    "description": "015?00VISA?3100000000000?32054570002292729220938445467?33466?34YX, GRONG 0314"
+  },
+  {
+    "id": 5890,
+    "description": "OPPGAVE Til: Furset Kantine ASFurset Kantine AS"
+  },
+  {
+    "id": 2003,
+    "description": "015?00VISA?3100000000000?32054383762230130000482053112?33940?34TH, ANSEN LADE"
+  },
+  {
+    "id": 95,
+    "description": "048?00DEBIT CARD TRANS?3170010078581?3205449215119671970993894346, 5?33872?34USD 1919,89 MAXAMPS.COM?35VALUTAKURS:     8,9897"
+  },
+  {
+    "id": 2450,
+    "description": "OPPGAVE Til: Tempe Dekkservice AS"
+  },
+  {
+    "id": 5557,
+    "description": "VISA VARE *4174 12.03 USD 523.95 PAYPAL *AIM DYNAMIC Kurs: 10.1970"
+  },
+  {
+    "id": 2484,
+    "description": "015?00VISA?3100000000000?32054765182299017029894024113?33081?34US, D 94,09 ADAFRUIT INDUSTRI?35VALUTAKURS:    10,8509"
+  },
+  {
+    "id": 4405,
+    "description": "OPPGAVE Til: Benja Siam Syd ASBenja Siam Syd AS"
+  },
+  {
+    "id": 1394,
+    "description": "048?00DEBIT CARD TRANS?3170010078581?3205449216214700002056354711, 2?33718?34USD 551,54 SP MJBOTS ROBOTI?35VALUTAKURS:     9,8254"
+  },
+  {
+    "id": 5264,
+    "description": "OPPGAVE Til: Finexa Solutions ASFinexa Solutions AS"
+  },
+  {
+    "id": 4273,
+    "description": "OPPGAVE Til: Bente LereggenBente Lereggen"
+  },
+  {
+    "id": 4848,
+    "description": "OVFUTLAND IMTECH,IGOR MIS BF2311130254203IMTech,igor misic"
+  },
+  {
+    "id": 5150,
+    "description": "OPPGAVE Til: 6am Accelerator AS6am Accelerator AS"
+  },
+  {
+    "id": 3383,
+    "description": "TT NORWAY"
+  },
+  {
+    "id": 2664,
+    "description": "OVERF\u00d8RT Fra: VATER AS Betalt: 22.11.22"
+  },
+  {
+    "id": 4602,
+    "description": "OPPGAVE Til: Klarna Bank AbKlarna Bank Ab"
+  },
+  {
+    "id": 3025,
+    "description": "K 976,33 mytrip.no.M0XA2K"
+  },
+  {
+    "id": 4468,
+    "description": "OPPGAVE Til: Automester ASAutomester AS"
+  },
+  {
+    "id": 2960,
+    "description": "022?00FOREIGN TRANSFER?20TR247009220?3170015935063?32AMROP KB?34T, elebank ref.: U64460?35SEK          40.000,00"
+  },
+  {
+    "id": 3710,
+    "description": "F 2315,25 MURZILLI CONSUL?35VALUTAKURS:    12,3025"
+  },
+  {
+    "id": 3970,
+    "description": "OPPGAVE Til: Dj Otto Barsten JohnsenDj Otto Barsten Johnsen"
+  },
+  {
+    "id": 3734,
+    "description": "OPPGAVE Til: Nidarvoll Bil ASNidarvoll Bil AS"
+  },
+  {
+    "id": 3607,
+    "description": "VISA VARE *4174 27.04 EUR 120.49 MATERIALISE.COM 3754372 - Kurs: 12.0137"
+  },
+  {
+    "id": 3136,
+    "description": "ttle.:Liset Thai takeaw"
+  },
+  {
+    "id": 2460,
+    "description": "015?00VISA?3100000000000?32054244692293241770477371113?33075?34EU, R 138,07 PAYPAL :TERABEE?35VALUTAKURS:    10,6542"
+  },
+  {
+    "id": 2755,
+    "description": "015?00VISA?3100000000000?32054492162333000043215483113?33173?34US, D 72,00 THESPAGHETTIDETEC?35VALUTAKURS:    10,2383"
+  },
+  {
+    "id": 2636,
+    "description": "015?00VISA?3100000000000?32054570002321732120145579467?33524?347E, LEVEN 7147 OSL GARDEMO"
+  },
+  {
+    "id": 891,
+    "description": "048?00DEBIT CARD TRANS?3170010078581?32ARK.REF .17112499   DATO 0, 9?33.03?34KL. 21.28 VERSJON 2 AUT. 46?35FRATI RESTAURAN MUNKEGT., 25"
+  },
+  {
+    "id": 933,
+    "description": "048?00DEBIT CARD TRANS?3170010078581?3205420429207000372604585511, 2?33591?34USD 294,13 eBay O:26-08364-?35VALUTAKURS:     9,1636"
+  },
+  {
+    "id": 1181,
+    "description": "048?00DEBIT CARD TRANS?3170010078581?3205460905211100000516235646, 6?33719?34NIMBER: TASK: 273516"
+  },
+  {
+    "id": 1444,
+    "description": "015?00VISA?3100000000000?32054456392154110002239917466?33934?34VA, ERNESEKSPRESSEN.NO"
+  },
+  {
+    "id": 2019,
+    "description": "048?00DEBIT CARD TRANS?3170010078581?32ARK.REF .17625367   DATO 2, 3?33.08?34KL. 15.24 VERSJON 2 AUT. 46?35STARBUCKS 6117  GML STOKK, AV"
+  },
+  {
+    "id": 245,
+    "description": "048?00DEBIT CARD TRANS?3170010078581?32ARK.REF .17401784   DATO 2, 3?33.09?34KL. 16.40 VERSJON 2 AUT. 46?35SABRURA VALKYRI VALKYRIEG, AT"
+  },
+  {
+    "id": 1925,
+    "description": "048?00DEBIT CARD TRANS?3170010078581?32ARK.REF .17157149   DATO 1, 1?33.08?34KL. 12.50 VERSJON 1 AUT. 11?35WURTH 28401 TRONDHEIM"
+  },
+  {
+    "id": 1908,
+    "description": "048?00DEBIT CARD TRANS?3170010078581?32ARK.REF .17789422   DATO 0, 8?33.08?34KL. 18.52 VERSJON 1 AUT. 11?35CIRCLE K SNASA  SNASA SNA, SA"
+  },
+  {
+    "id": 985,
+    "description": "048?00DEBIT CARD TRANS?3170010078581?3205454109208105071539492546, 6?33627?34WIDEROE     7012130030980"
+  },
+  {
+    "id": 1293,
+    "description": "042?00GIRO?3100000000000?32ARK.ID  8012107989.240 DATO?33 12.05"
+  },
+  {
+    "id": 1647,
+    "description": "015?00VISA?3100000000000?32054463662181521824314676112?33805?34OB, S BYGG TILLER 842218"
+  },
+  {
+    "id": 1604,
+    "description": "048?00DEBIT CARD TRANS?3170010078581?32ARK.REF .17223415   DATO 2, 4?33.06?34KL. 18.13 VERSJON 1 AUT. 11?35MAT FRA MIDTOST SLUPPENVE, GE"
+  },
+  {
+    "id": 1619,
+    "description": "048?00DEBIT CARD TRANS?3170010078581?32ARK.REF .17151123   DATO 2, 8?33.06?34KL. 22.38 VERSJON 2 AUT. 46?35UNA PIZZERIA BEDDINGEN 14, T"
+  },
+  {
+    "id": 1011,
+    "description": "048?00DEBIT CARD TRANS?3170010078581?32ARK.REF .17954364   DATO 2, 5?33.03?34KL. 22.43 VERSJON 2 AUT. 46?35NORGESTAXI AS ENSJOVEIEN, 2"
+  },
+  {
+    "id": 910,
+    "description": "048?00DEBIT CARD TRANS?3170010078581?32ARK.REF .17308127   DATO 1, 1?33.03?34KL. 19.13 VERSJON 2 AUT. 46?357ELEVEN 7112 VA TRONDHEIM, L"
+  },
+  {
+    "id": 532,
+    "description": "043?00GIRO?3181013123616?32AHLSELL NORGE AS"
+  },
+  {
+    "id": 373,
+    "description": "048?00DEBIT CARD TRANS?3170010078581?3205483064130853000247702146, 6?33154?34SEK 2000,00 BOLAGSVERKET IN?35VALUTAKURS:     1,0222"
+  },
+  {
+    "id": 589,
+    "description": "022?00FOREIGN TRANSFER?3170015935187?32Sweden Rent a Car AB?34Tel, ebank ref.: V28492?35SEK           9.991,73"
+  },
+  {
+    "id": 138,
+    "description": "048?00DEBIT CARD TRANS?3170010078581?3205419881121413003038703346, 5?33910?34NOK 4908,82 PAYPAL :ETSY.CO"
+  },
+  {
+    "id": 274,
+    "description": "043?00GIRO?20Fnr 36071?3142701960291?32Ernestus Skilt og Reklame, A?33S"
+  },
+  {
+    "id": 210,
+    "description": "023?00TRANSFER?3112028552872?32Otto Barsten Johnsen"
+  }
+]
+
+Analyze each unmatched transaction and return a JSON array with your classifications.

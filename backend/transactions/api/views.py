@@ -9,8 +9,11 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from django.core.cache import cache
+from django.conf import settings
+from django.core.paginator import Paginator
 
-from ..models import Transaction, Category, BankStatement, BankAccount
+from ..models import Transaction, Category, BankStatement, BankAccount, Supplier
 from .serializers import (
     TransactionSerializer,
     TransactionDetailSerializer,
@@ -18,13 +21,15 @@ from .serializers import (
     BankStatementSerializer,
     BankAccountSerializer,
     TransactionSummarySerializer,
-    TransactionCategoryUpdateSerializer
+    TransactionCategoryUpdateSerializer,
+    SupplierSerializer
 )
 from ..services.transaction_service import (
     get_transaction_summary,
     update_transaction_category,
     import_transactions_from_tripletex,
-    update_all_internal_transfers
+    update_all_internal_transfers,
+    get_monthly_budget_data
 )
 from ..services.category_service import (
     initialize_default_categories
@@ -36,13 +41,27 @@ class TransactionViewSet(viewsets.ModelViewSet):
     """
     API endpoint for viewing and editing transactions.
     """
-    queryset = Transaction.objects.all().order_by('-date')
+    queryset = Transaction.objects.all()  # Base queryset for DRF to determine model
     serializer_class = TransactionSerializer
     permission_classes = [AllowAny]  # Update this based on your security requirements
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['category', 'date', 'is_internal_transfer', 'is_wage_transfer', 'is_tax_transfer', 'should_process']
     search_fields = ['description', 'tripletex_id', 'bank_account_id']
     ordering_fields = ['date', 'amount', 'description']
+
+    def get_queryset(self):
+        """
+        Get the base queryset for the viewset.
+        """
+        # Get base queryset with all necessary relations
+        return Transaction.objects.select_related(
+            'category',
+            'bank_account',
+            'supplier',
+            'ledger_account'
+        ).prefetch_related(
+            'transaction_accounts__account'
+        ).order_by('-date')
     
     def get_serializer_class(self):
         """
@@ -133,6 +152,37 @@ class TransactionViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
+    def list(self, request, *args, **kwargs):
+        """
+        Override list method to handle pagination with caching.
+        """
+        # Get the page number from query parameters
+        page = self.request.query_params.get('page', '1')
+        
+        # Generate a cache key that includes query parameters to handle filters
+        cache_key = f'transactions_page_{page}'
+        if request.query_params:
+            param_string = "_".join(f"{k}:{v}" for k, v in sorted(request.query_params.items()))
+            cache_key = f'transactions_page_{page}_{param_string}'
+        
+        # Try to get from cache first
+        cached_data = cache.get(cache_key)
+        if cached_data is not None:
+            return Response(cached_data)
+        
+        # If not in cache, generate the response
+        response = super().list(request, *args, **kwargs)
+        
+        # Cache the response data
+        if response.status_code == 200:
+            cache.set(cache_key, response.data, timeout=3600)  # Cache for 1 hour
+        
+        # Cache invalidation logic for create/update/delete operations
+        if request.method in ['POST', 'PUT', 'PATCH', 'DELETE']:
+            cache.clear()  # Clear all cache since we can't know which pages are affected
+        
+        return response
+
 class CategoryViewSet(viewsets.ModelViewSet):
     """
     API endpoint for viewing and editing categories.
@@ -157,6 +207,48 @@ class CategoryViewSet(viewsets.ModelViewSet):
             "status": "success",
             "message": f"Initialized {created_count} categories"
         })
+    
+    @swagger_auto_schema(
+        operation_description="Get budget data for the current month",
+        manual_parameters=[
+            openapi.Parameter(
+                'exclude_salary', 
+                openapi.IN_QUERY, 
+                description="Whether to exclude salary categories",
+                type=openapi.TYPE_BOOLEAN, 
+                default=True
+            ),
+            openapi.Parameter(
+                'year', 
+                openapi.IN_QUERY, 
+                description="Year to get budget data for (defaults to current year)",
+                type=openapi.TYPE_INTEGER
+            ),
+            openapi.Parameter(
+                'month', 
+                openapi.IN_QUERY, 
+                description="Month to get budget data for (defaults to current month)",
+                type=openapi.TYPE_INTEGER
+            )
+        ],
+        responses={200: openapi.Response(description="Budget data retrieved successfully")}
+    )
+    @action(detail=False, methods=['get'])
+    def budget(self, request):
+        """
+        Get budget data for the current month.
+        """
+        exclude_salary = request.query_params.get('exclude_salary', 'true').lower() == 'true'
+        year = request.query_params.get('year')
+        month = request.query_params.get('month')
+        
+        budget_data = get_monthly_budget_data(
+            exclude_salary=exclude_salary,
+            year=year,
+            month=month
+        )
+        
+        return Response(budget_data)
 
 class BankAccountViewSet(viewsets.ModelViewSet):
     """
@@ -179,6 +271,13 @@ class BankStatementViewSet(viewsets.ModelViewSet):
     filterset_fields = ['category', 'date']
     search_fields = ['description', 'source_file']
     ordering_fields = ['date', 'amount', 'description']
+
+class SupplierViewSet(viewsets.ModelViewSet):
+    queryset = Supplier.objects.all().order_by('name')
+    serializer_class = SupplierSerializer
+    permission_classes = [AllowAny]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name', 'organization_number', 'email']
 
 @swagger_auto_schema(
     method='post',
@@ -253,4 +352,36 @@ def analyze_transfers(request):
         return Response(
             {"status": "error", "message": f"Analysis failed: {str(e)}"},
             status=status.HTTP_400_BAD_REQUEST
+        )
+
+@swagger_auto_schema(
+    method='post',
+    operation_description="Clear the application cache",
+    responses={
+        200: openapi.Response(description="Cache cleared successfully", schema=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'status': openapi.Schema(type=openapi.TYPE_STRING, description="Status of the operation"),
+                'message': openapi.Schema(type=openapi.TYPE_STRING, description="Result message")
+            }
+        ))
+    }
+)
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def clear_cache(request):
+    """
+    Clear the application cache.
+    """
+    try:
+        cache.clear()
+        return Response({
+            "status": "success",
+            "message": "Cache cleared successfully"
+        })
+    except Exception as e:
+        logger.error(f"Error clearing cache: {str(e)}")
+        return Response(
+            {"status": "error", "message": f"Failed to clear cache: {str(e)}"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
         ) 

@@ -9,13 +9,14 @@ from .api.views import (
     BankStatementViewSet,
     BankAccountViewSet,
     import_from_tripletex,
-    analyze_transfers
+    analyze_transfers,
+    clear_cache
 )
 from .views import categorize_transaction
 
 # Create a router and register our viewsets with it
 router = DefaultRouter()
-router.register(r'transactions', TransactionViewSet)
+router.register(r'transactions', TransactionViewSet, basename='transaction')
 router.register(r'categories', CategoryViewSet)
 router.register(r'bank-statements', BankStatementViewSet)
 router.register(r'bank-accounts', BankAccountViewSet)
@@ -31,4 +32,7 @@ urlpatterns = [
     
     # Category endpoints
     path('categorize/<int:transaction_id>/', categorize_transaction, name='categorize-transaction'),
+    
+    # Cache management
+    path('clear-cache/', clear_cache, name='clear-cache'),
 ] 

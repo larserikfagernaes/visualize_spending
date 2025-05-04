@@ -51,7 +51,7 @@ const TransactionTreeMap = ({ data, transactions, summaryData }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   
   // Define account numbers to exclude
-  const excludedAccountNumbers = useMemo(() => ['232', '208', '1921', '8160', '1926'], []);
+  const excludedAccountNumbers = useMemo(() => ['232', '208', '1921', '8160', '1926', '1961', '1923'], []);
   
   // Prepare data for category treemap
   const categoryTreemapData = useMemo(() => {

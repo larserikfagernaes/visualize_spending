@@ -1,4 +1,4 @@
-import { Transaction, PaginatedResponse, FilterState, TransactionSummary } from '../types/models';
+import { Transaction, PaginatedResponse, FilterState, TransactionSummary, Supplier } from '../types/models';
 import { get, post, put, del } from './api';
 
 const BASE_URL = '/transactions';
@@ -127,4 +127,13 @@ export const getTransactionSummary = async (
   
   const response = await get<TransactionSummary>(`${BASE_URL}/summary`, params);
   return response.data;
+};
+
+/**
+ * Fetch all suppliers
+ * @returns Promise with all suppliers
+ */
+export const getSuppliers = async (): Promise<Supplier[]> => {
+  const response = await get<{ results: Supplier[] }>('/suppliers');
+  return response.data.results;
 }; 

@@ -21,6 +21,7 @@ env = environ.Env(
     ALLOWED_HOSTS=(list, ['localhost', '127.0.0.1']),
     CORS_ALLOWED_ORIGINS=(list, ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:5000']),
     CORS_ALLOW_CREDENTIALS=(bool, True),
+    REDIS_URL=(str, 'redis://127.0.0.1:6379/1'),
 )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -244,3 +245,23 @@ LOGGING = {
 LOGS_DIR = os.path.join(BASE_DIR, 'logs')
 if not os.path.exists(LOGS_DIR):
     os.makedirs(LOGS_DIR)
+
+# Cache configuration
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/var/tmp/django_cache',
+        'TIMEOUT': 86400,  # 24 hours
+        'OPTIONS': {
+            'MAX_ENTRIES': 10000
+        }
+    }
+}
+
+# Cache key prefix to avoid collisions
+CACHE_KEY_PREFIX = 'finance_visualizer'
+
+# Cache middleware settings
+CACHE_MIDDLEWARE_ALIAS = 'default'
+CACHE_MIDDLEWARE_SECONDS = 86400  # 24 hours
+CACHE_MIDDLEWARE_KEY_PREFIX = CACHE_KEY_PREFIX

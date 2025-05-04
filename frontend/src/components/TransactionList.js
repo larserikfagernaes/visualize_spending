@@ -25,6 +25,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import axios from 'axios';
 import TransactionDetailModal from './TransactionDetailModal';
+import { getSuppliers, updateTransaction } from '../services/transactionService';
 
 const API_URL = 'http://localhost:8000/api/v1';
 
@@ -57,6 +58,10 @@ const TransactionList = ({
   // State for transaction detail modal
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
+
+  // Add new state for suppliers
+  const [suppliers, setSuppliers] = useState([]);
+  const [editingSupplierTransaction, setEditingSupplierTransaction] = useState(null);
 
   // Ensure transactions and categories are always arrays
   const transactionData = Array.isArray(transactions) ? transactions : [];
@@ -481,6 +486,32 @@ const TransactionList = ({
     document.body.removeChild(link);
   };
 
+  // Fetch suppliers on mount
+  useEffect(() => {
+    getSuppliers()
+      .then(data => {
+        console.log('Suppliers loaded:', data);
+        setSuppliers(data);
+      })
+      .catch((e) => console.error('Failed to fetch suppliers:', e));
+  }, []);
+
+  // Handle supplier change
+  const handleSupplierChange = async (transactionId, supplierId) => {
+    setEditingSupplierTransaction(transactionId);
+    try {
+      await updateTransaction(transactionId, { supplier: supplierId || null });
+      setFilteredTransactions((prev) => prev.map((tx) =>
+        tx.id === transactionId ? { ...tx, supplier: supplierId ? parseInt(supplierId) : null, supplier_name: suppliers.find(s => String(s.id) === supplierId)?.name || 'No Supplier' } : tx
+      ));
+      if (onUpdate) onUpdate();
+    } catch (error) {
+      console.error('Error updating supplier:', error);
+    } finally {
+      setTimeout(() => setEditingSupplierTransaction(null), 500);
+    }
+  };
+
   return (
     <Card>
       <CardContent>
@@ -697,7 +728,33 @@ const TransactionList = ({
                              (transaction.account_id ? `Account: ${transaction.account_id}` : 'Unknown')}
                           </TableCell>
                           <TableCell>
-                            {transaction.supplier_name || 'No Supplier'}
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                              <TextField
+                                select
+                                size="small"
+                                value={transaction.supplier ? String(transaction.supplier) : ''}
+                                onChange={(e) => { e.stopPropagation(); handleSupplierChange(transaction.id, e.target.value); }}
+                                variant="outlined"
+                                sx={{ minWidth: 180 }}
+                                SelectProps={{
+                                  renderValue: (value) => {
+                                    if (!value) return 'No Supplier';
+                                    const sup = suppliers.find(s => String(s.id) === value);
+                                    return sup ? sup.name : 'No Supplier';
+                                  },
+                                }}
+                              >
+                                <MenuItem value="">No Supplier</MenuItem>
+                                {suppliers.map((supplier) => (
+                                  <MenuItem key={supplier.id} value={String(supplier.id)}>
+                                    {supplier.name || supplier.tripletex_id}
+                                  </MenuItem>
+                                ))}
+                              </TextField>
+                              {editingSupplierTransaction === transaction.id && (
+                                <CircularProgress size={20} sx={{ ml: 1 }} />
+                              )}
+                            </Box>
                           </TableCell>
                           <TableCell onClick={(e) => e.stopPropagation()}>
                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -750,8 +807,7 @@ const TransactionList = ({
               onRowsPerPageChange={handleChangeRowsPerPage}
               labelDisplayedRows={({ from, to, count }) => 
                 showingAllTransactions 
-                  ? `${from}-${to} of ${count}`
-                  : `${from}-${to} of ${count} (showing only first page from API)`
+                  ? `${from}-${to} of ${count}`                  : `${from}-${to} of ${count} (showing only first page from API)`
               }
             />
           </>

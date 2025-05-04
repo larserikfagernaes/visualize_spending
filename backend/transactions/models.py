@@ -23,6 +23,8 @@ class Category(TimeStampedModel):
     """
     name = models.CharField(_("Name"), max_length=100, unique=True)
     description = models.TextField(_("Description"), blank=True, null=True)
+    budget = models.DecimalField(_("Budget"), max_digits=12, decimal_places=2, default=0, 
+                               help_text=_("Monthly budget allocated for this category"))
     
     class Meta:
         verbose_name = _("Category")

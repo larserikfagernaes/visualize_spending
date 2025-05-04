@@ -5,6 +5,7 @@ import difflib
 import argparse
 from django.core.management.base import BaseCommand
 from datetime import datetime
+import re
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'finance_visualizer.settings')
@@ -13,7 +14,37 @@ import django
 django.setup()
 
 # Import Django models after setup
-from transactions.models import Transaction, Supplier
+from transactions.models import Transaction, Supplier, Category, CategorySupplierMap
+
+# Import scikit-learn for n-gram matching
+try:
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.metrics.pairwise import cosine_similarity
+except ImportError:
+    print("Required package scikit-learn not installed. Please run: pip install scikit-learn")
+    sys.exit(1)
+
+def preprocess_description(text):
+    """
+    Preprocess description text:
+    1. Convert to lowercase
+    2. Replace series of digits with spaces
+    3. Remove excess whitespace
+    """
+    if not text:
+        return ""
+    
+    # Convert to lowercase
+    text = text.lower()
+    
+    # Replace consecutive digits with a single space
+    text = re.sub(r'\d+', ' ', text)
+    
+    # Replace multiple spaces with a single space
+    text = re.sub(r'\s+', ' ', text)
+    
+    # Trim whitespace
+    return text.strip()
 
 def calculate_similarity(text1, text2):
     """Calculates the similarity ratio between two strings."""
@@ -25,19 +56,72 @@ def get_unmatched_transactions():
     """Retrieves all transactions without a supplier."""
     return Transaction.objects.filter(
         supplier__isnull=True
-    ).values('id', 'description')
+    ).order_by('-date', '-id').values('id', 'description', 'raw_data')
 
 def get_matched_transactions():
     """Retrieves all transactions with a supplier for reference."""
     return Transaction.objects.exclude(
         supplier__isnull=True
-    ).values('id', 'description', 'supplier__name', 'supplier__id')
+    ).values('id', 'description', 'supplier__name', 'supplier__id', 'raw_data')
 
 def find_best_matches(unmatched_transactions, reference_transactions):
-    """Find the best supplier match for each unmatched transaction."""
+    """Find the best supplier match for each unmatched transaction using n-gram Best Match Method."""
     results = []
     
+    # Prepare data structures for n-gram matching
+    train_descriptions = []
+    supplier_info = []
+    
+    # Extract descriptions from training data and preprocess
+    for ref_tx in reference_transactions:
+        # Preprocess the main description
+        preprocessed_description = preprocess_description(ref_tx['description'])
+        train_descriptions.append(preprocessed_description)
+        supplier_info.append({
+            'supplier_id': ref_tx['supplier__id'],
+            'supplier_name': ref_tx['supplier__name'],
+            'tx_id': ref_tx['id'],
+            'description': ref_tx['description']
+        })
+        
+        # Extract additional descriptions from groupedPostings in raw_data
+        additional_descriptions = []
+        try:
+            if ref_tx['raw_data'] and isinstance(ref_tx['raw_data'], dict) and 'value' in ref_tx['raw_data']:
+                value = ref_tx['raw_data']['value']
+                if isinstance(value, dict) and 'groupedPostings' in value:
+                    grouped_postings = value['groupedPostings']
+                    if isinstance(grouped_postings, list):
+                        for posting in grouped_postings:
+                            if isinstance(posting, dict) and 'description' in posting and posting['description']:
+                                desc = posting['description'].strip()
+                                if desc:
+                                    # Add to training data
+                                    train_descriptions.append(preprocess_description(desc))
+                                    supplier_info.append({
+                                        'supplier_id': ref_tx['supplier__id'],
+                                        'supplier_name': ref_tx['supplier__name'],
+                                        'tx_id': ref_tx['id'],
+                                        'description': posting['description']
+                                    })
+        except Exception as e:
+            # If any error occurs, just continue
+            pass
+    
+    # Create TF-IDF vectorizer using character n-grams
+    vectorizer = TfidfVectorizer(
+        analyzer='char',
+        ngram_range=(3, 5),
+        lowercase=True,
+        min_df=2  # Ignore n-grams that appear in less than 2 documents
+    )
+    
+    # Fit and transform training descriptions
+    train_vectors = vectorizer.fit_transform(train_descriptions)
+    
+    # Process each unmatched transaction
     for unmatched_tx in unmatched_transactions:
+        # Initialize best match record
         best_match = {
             'transaction_id': unmatched_tx['id'],
             'description': unmatched_tx['description'],
@@ -45,18 +129,64 @@ def find_best_matches(unmatched_transactions, reference_transactions):
             'best_match_supplier_id': None,
             'best_match_tx_id': None,
             'best_match_description': None,
-            'similarity_score': 0
+            'similarity_score': 0,
+            'from_source': None
         }
         
-        for ref_tx in reference_transactions:
-            similarity = calculate_similarity(unmatched_tx['description'], ref_tx['description'])
-            
-            if similarity > best_match['similarity_score']:
-                best_match['similarity_score'] = similarity
-                best_match['best_match_supplier'] = ref_tx['supplier__name']
-                best_match['best_match_supplier_id'] = ref_tx['supplier__id']
-                best_match['best_match_tx_id'] = ref_tx['id']
-                best_match['best_match_description'] = ref_tx['description']
+        # Preprocess the main description
+        preprocessed_description = preprocess_description(unmatched_tx['description'])
+        
+        # Match based on main transaction description
+        main_desc_vector = vectorizer.transform([preprocessed_description])
+        main_cosine_scores = cosine_similarity(main_desc_vector, train_vectors).flatten()
+        main_best_idx = main_cosine_scores.argmax()
+        main_best_score = main_cosine_scores[main_best_idx]
+        main_match_info = supplier_info[main_best_idx]
+        
+        # Update best match with the main description match
+        best_match.update({
+            'best_match_supplier': main_match_info['supplier_name'],
+            'best_match_supplier_id': main_match_info['supplier_id'],
+            'best_match_tx_id': main_match_info['tx_id'],
+            'best_match_description': main_match_info['description'],
+            'similarity_score': main_best_score,
+            'from_source': 'main_description'
+        })
+        
+        # Extract and check grouped posting descriptions if available
+        try:
+            if unmatched_tx['raw_data'] and isinstance(unmatched_tx['raw_data'], dict) and 'value' in unmatched_tx['raw_data']:
+                value = unmatched_tx['raw_data']['value']
+                if isinstance(value, dict) and 'groupedPostings' in value:
+                    grouped_postings = value['groupedPostings']
+                    if isinstance(grouped_postings, list):
+                        for i, posting in enumerate(grouped_postings):
+                            if isinstance(posting, dict) and 'description' in posting and posting['description']:
+                                desc = posting['description'].strip()
+                                if desc:
+                                    # Preprocess grouped posting description
+                                    preprocessed_gp_desc = preprocess_description(desc)
+                                    
+                                    # Match based on this grouped posting description
+                                    gp_vector = vectorizer.transform([preprocessed_gp_desc])
+                                    gp_cosine_scores = cosine_similarity(gp_vector, train_vectors).flatten()
+                                    gp_best_idx = gp_cosine_scores.argmax()
+                                    gp_best_score = gp_cosine_scores[gp_best_idx]
+                                    gp_match_info = supplier_info[gp_best_idx]
+                                    
+                                    # Update best match if this grouped posting has a higher similarity score
+                                    if gp_best_score > best_match['similarity_score']:
+                                        best_match.update({
+                                            'best_match_supplier': gp_match_info['supplier_name'],
+                                            'best_match_supplier_id': gp_match_info['supplier_id'],
+                                            'best_match_tx_id': gp_match_info['tx_id'],
+                                            'best_match_description': gp_match_info['description'],
+                                            'similarity_score': gp_best_score,
+                                            'from_source': f'grouped_posting_{i}'
+                                        })
+        except Exception as e:
+            # If any error occurs, just continue with the main description match
+            pass
         
         results.append(best_match)
     
@@ -81,7 +211,9 @@ def print_results(results, limit=20):
         if result['best_match_supplier'] and result['similarity_score'] > 0:
             print(f"  Proposed Match: Supplier '{result['best_match_supplier']}' (ID: {result['best_match_supplier_id']})")
             print(f"  From Transaction: {result['best_match_tx_id']} - '{result['best_match_description']}'")
-            print(f"  Similarity Score: {result['similarity_score']:.2f}")
+            print(f"  Similarity Score: {result['similarity_score']:.4f}")
+            if 'from_source' in result and result['from_source']:
+                print(f"  Match Source: {result['from_source']}")
         else:
             print("  No suitable match found.")
             
@@ -91,7 +223,7 @@ def print_results(results, limit=20):
         print(f"Showing top {limit} results of {len(sorted_results)} total matches.")
 
 def apply_matches_to_database(results, similarity_threshold=0.7):
-    """Apply the matches to the database if they meet the similarity threshold."""
+    """Apply the matches to the database if they meet the similarity threshold, and infer category from supplier's previous transactions."""
     applied_count = 0
     skipped_count = 0
     
@@ -104,6 +236,24 @@ def apply_matches_to_database(results, similarity_threshold=0.7):
                 
                 # Update the transaction with the matched supplier
                 transaction.supplier = supplier
+                
+                # Infer category from previous transactions with this supplier
+                prev_categories = (
+                    Transaction.objects
+                    .filter(supplier=supplier)
+                    .exclude(category__isnull=True)
+                    .values_list('category', flat=True)
+                )
+                if prev_categories:
+                    # Find the most common category
+                    from collections import Counter
+                    most_common_category_id, _ = Counter(prev_categories).most_common(1)[0]
+                    category = Category.objects.filter(id=most_common_category_id).first()
+                    if category:
+                        transaction.category = category
+                        print(f"  → Set category to '{category.name}' (ID: {category.id}) based on supplier's previous transactions.")
+                        # Optionally, update or create CategorySupplierMap
+                        CategorySupplierMap.objects.get_or_create(supplier=supplier, category=category)
                 
                 # If raw_data contains matchType, update it
                 if transaction.raw_data and isinstance(transaction.raw_data, dict):
@@ -123,7 +273,7 @@ def apply_matches_to_database(results, similarity_threshold=0.7):
     return applied_count, skipped_count
 
 class Command(BaseCommand):
-    help = 'Match transactions without suppliers based on description similarity.'
+    help = 'Match transactions without suppliers based on description similarity using N-gram Best Match Method.'
 
     def add_arguments(self, parser):
         parser.add_argument('-a', '--apply', action='store_true', 
@@ -164,7 +314,7 @@ class Command(BaseCommand):
                 self.stdout.write(f"Processing all {unmatched_count} unmatched transactions.")
             
             # Find best matches
-            self.stdout.write("Processing matches...")
+            self.stdout.write("Processing matches using Best Match N-gram Method...")
             results = find_best_matches(unmatched_transactions, reference_transactions)
             
             # Print results

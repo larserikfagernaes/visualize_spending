@@ -108,4 +108,17 @@ export interface PaginatedResponse<T> {
   next: string | null;
   previous: string | null;
   results: T[];
+}
+
+export interface Supplier {
+  id: number;
+  tripletex_id: string;
+  name?: string;
+  organization_number?: string;
+  email?: string;
+  phone_number?: string;
+  address?: string;
+  url?: string;
+  created_at: string;
+  updated_at: string;
 } 

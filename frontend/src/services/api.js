@@ -186,4 +186,14 @@ export const del = async (url, config) => {
   }
 };
 
+export const clearCache = async () => {
+  try {
+    const response = await api.post('/clear-cache/');
+    return response.data;
+  } catch (error) {
+    console.error('Error clearing cache:', error);
+    throw error;
+  }
+};
+
 export default api; 

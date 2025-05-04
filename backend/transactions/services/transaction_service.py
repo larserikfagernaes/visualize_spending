@@ -5,10 +5,11 @@ Handles business logic for transactions.
 import logging
 import os
 import json
-from datetime import datetime
+from datetime import datetime, date
+from calendar import monthrange
 import requests
 from django.db import transaction
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count, Q
 from django.utils.text import slugify
 
 from ..models import Transaction, Category, BankAccount
@@ -433,4 +434,85 @@ def update_all_internal_transfers():
         'updated_transactions': updated_count,
         'already_marked': already_marked_count,
         'total_processed': transactions.count()
+    }
+
+def get_monthly_budget_data(exclude_salary=True, year=None, month=None):
+    """
+    Get monthly spending data for budget tracking.
+    
+    Args:
+        exclude_salary (bool): Whether to exclude salary categories
+        year (int): Year to get budget data for (defaults to current year)
+        month (int): Month to get budget data for (defaults to current month)
+        
+    Returns:
+        dict: Monthly budget data with spent amounts and budgets
+    """
+    # Get current month's start and end dates
+    today = date.today()
+    
+    # Use provided year and month or defaults to current
+    year = int(year) if year is not None else today.year
+    month = int(month) if month is not None else today.month
+    
+    start_date = date(year, month, 1)
+    end_date = date(year, month, monthrange(year, month)[1])
+    
+    # Get all categories with budgets
+    categories = Category.objects.all()
+    
+    if exclude_salary:
+        # Exclude salary-related categories (typically named "Salary", "Lønn", etc.)
+        categories = categories.exclude(
+            Q(name__icontains='salary') | 
+            Q(name__icontains='lønn') | 
+            Q(name__icontains='wage')
+        )
+    
+    # Get transactions for the specified month
+    transactions = Transaction.objects.filter(
+        date__gte=start_date,
+        date__lte=end_date, 
+        is_internal_transfer=False,
+        amount__lt=0  # Only include expenses (negative amounts)
+    )
+    
+    # Calculate totals
+    total_budget = sum(category.budget for category in categories)
+    total_spent = abs(transactions.filter(
+        category__in=categories,
+        amount__lt=0  # Only count expenses (negative amounts)
+    ).aggregate(total=Sum('amount'))['total'] or 0)
+    
+    # Collect data by category
+    category_data = []
+    
+    for category in categories:
+        # Sum all expenses (negative amounts) for this category
+        spent_amount = abs(transactions.filter(
+            category=category,
+            amount__lt=0  # Only count expenses (negative amounts)
+        ).aggregate(total=Sum('amount'))['total'] or 0)
+        
+        category_data.append({
+            'id': category.id,
+            'name': category.name,
+            'description': category.description,
+            'budget': float(category.budget),
+            'spent': float(spent_amount),
+            'remaining': float(category.budget) - float(spent_amount),
+            'percentage': int((spent_amount / category.budget) * 100) if category.budget > 0 else 0
+        })
+    
+    # Sort categories by name
+    category_data.sort(key=lambda x: x['name'])
+    
+    return {
+        'total_budget': float(total_budget),
+        'total_spent': float(total_spent),
+        'total_remaining': float(total_budget) - float(total_spent),
+        'total_percentage': int((total_spent / total_budget) * 100) if total_budget > 0 else 0,
+        'categories': category_data,
+        'month': month,
+        'year': year
     } 

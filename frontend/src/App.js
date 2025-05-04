@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Box, Tabs, Tab, AppBar, Typography, CssBaseline, ThemeProvider, createTheme, FormGroup, FormControlLabel, Checkbox, Paper, Chip, Stack, TextField, Grid, Button } from '@mui/material';
+import { Container, Box, Tabs, Tab, AppBar, Typography, CssBaseline, ThemeProvider, createTheme, FormGroup, FormControlLabel, Checkbox, Paper, Chip, Stack, TextField, Grid, Button, Snackbar, Alert } from '@mui/material';
 import axios from 'axios';
 import ClearIcon from '@mui/icons-material/Clear';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { format } from 'date-fns';
+import { clearCache } from './services/api';
 
 // Import components
 import TransactionList from './components/TransactionList';
@@ -16,6 +17,7 @@ import TransactionListTest from './tests/TransactionListTest';
 import ApiTest from './components/ApiTest';
 import ApiTestDashboard from './components/ApiTestDashboard';
 import TransactionTreeMap from './components/TransactionTreeMap';
+import BudgetDashboard from './components/BudgetDashboard';
 
 // API URL - using the same endpoint as in services/api.js
 const API_URL = 'http://localhost:8000/api/v1';
@@ -111,6 +113,8 @@ function App() {
   
   // Filtered transactions based on universal filters
   const [filteredTransactions, setFilteredTransactions] = useState([]);
+  
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   
   // Apply universal filters to transactions
   useEffect(() => {
@@ -662,6 +666,27 @@ function App() {
     fetchTransactions(true);
   };
 
+  const handleClearCache = async () => {
+    try {
+      const response = await clearCache();
+      setSnackbar({
+        open: true,
+        message: response.message || 'Cache cleared successfully',
+        severity: 'success'
+      });
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: error.message || 'Failed to clear cache',
+        severity: 'error'
+      });
+    }
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar(prev => ({ ...prev, open: false }));
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -687,109 +712,136 @@ function App() {
               <Tab label="API Test" />
               <Tab label="API Test Dashboard" />
               <Tab label="TreeMap" />
+              <Tab label="Budget" />
             </Tabs>
           </AppBar>
 
-          <Paper sx={{ p: 2, mb: 3 }}>
-            <Typography variant="h6" gutterBottom>Filters</Typography>
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={8}>
-                <FormGroup row>
-                  <FormControlLabel
-                    control={
-                      <Checkbox 
-                        checked={universalFilters.hideInternalTransfers} 
-                        onChange={handleFilterChange}
-                        name="hideInternalTransfers"
-                      />
-                    }
-                    label="Hide Internal Transfers"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox 
-                        checked={universalFilters.hideWageTransfers} 
-                        onChange={handleFilterChange}
-                        name="hideWageTransfers"
-                      />
-                    }
-                    label="Hide Wage Transfers"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox 
-                        checked={universalFilters.hideTaxTransfers} 
-                        onChange={handleFilterChange}
-                        name="hideTaxTransfers"
-                      />
-                    }
-                    label="Hide Tax Transfers"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox 
-                        checked={universalFilters.showOnlyProcessable} 
-                        onChange={handleFilterChange}
-                        name="showOnlyProcessable"
-                      />
-                    }
-                    label="Show Only Processable"
-                  />
-                </FormGroup>
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <Box sx={{ display: 'flex', gap: 1 }}>
-                  <TextField
-                    label="Min Amount"
-                    variant="outlined"
-                    size="small"
-                    name="amountMin"
-                    value={universalFilters.amountMin}
-                    onChange={handleAmountFilterChange}
-                    sx={{ width: '50%' }}
-                  />
-                  <TextField
-                    label="Max Amount"
-                    variant="outlined"
-                    size="small"
-                    name="amountMax"
-                    value={universalFilters.amountMax}
-                    onChange={handleAmountFilterChange}
-                    sx={{ width: '50%' }}
-                  />
-                </Box>
-              </Grid>
-              <Grid item xs={12}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <Box sx={{ display: 'flex', gap: 2 }}>
-                    <DatePicker
-                      label="Start Date"
-                      value={universalFilters.startDate}
-                      onChange={(newValue) => handleDateChange('startDate', newValue)}
-                      slotProps={{ textField: { size: 'small', sx: { width: '100%' } } }}
+          {/* Only show filter bar if not on Budget tab */}
+          {tabValue !== 7 && (
+            <Paper sx={{ p: 2, mb: 3 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                <Typography variant="h6">Filters</Typography>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  size="small"
+                  onClick={handleClearCache}
+                  sx={{ whiteSpace: 'nowrap' }}
+                >
+                  Clear Cache
+                </Button>
+              </Box>
+              <Grid container spacing={2}>
+                <Grid item xs={12} md={8}>
+                  <FormGroup row>
+                    <FormControlLabel
+                      control={
+                        <Checkbox 
+                          checked={universalFilters.hideInternalTransfers} 
+                          onChange={handleFilterChange}
+                          name="hideInternalTransfers"
+                        />
+                      }
+                      label="Hide Internal Transfers"
                     />
-                    <DatePicker
-                      label="End Date"
-                      value={universalFilters.endDate}
-                      onChange={(newValue) => handleDateChange('endDate', newValue)}
-                      slotProps={{ textField: { size: 'small', sx: { width: '100%' } } }}
+                    <FormControlLabel
+                      control={
+                        <Checkbox 
+                          checked={universalFilters.hideWageTransfers} 
+                          onChange={handleFilterChange}
+                          name="hideWageTransfers"
+                        />
+                      }
+                      label="Hide Wage Transfers"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox 
+                          checked={universalFilters.hideTaxTransfers} 
+                          onChange={handleFilterChange}
+                          name="hideTaxTransfers"
+                        />
+                      }
+                      label="Hide Tax Transfers"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox 
+                          checked={universalFilters.showOnlyProcessable} 
+                          onChange={handleFilterChange}
+                          name="showOnlyProcessable"
+                        />
+                      }
+                      label="Show Only Processable"
+                    />
+                  </FormGroup>
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <Box sx={{ display: 'flex', gap: 1 }}>
+                    <TextField
+                      label="Min Amount"
+                      variant="outlined"
+                      size="small"
+                      name="amountMin"
+                      value={universalFilters.amountMin}
+                      onChange={handleAmountFilterChange}
+                      sx={{ width: '50%' }}
+                    />
+                    <TextField
+                      label="Max Amount"
+                      variant="outlined"
+                      size="small"
+                      name="amountMax"
+                      value={universalFilters.amountMax}
+                      onChange={handleAmountFilterChange}
+                      sx={{ width: '50%' }}
                     />
                   </Box>
-                </LocalizationProvider>
+                </Grid>
+                <Grid item xs={12}>
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <Box sx={{ display: 'flex', gap: 2 }}>
+                      <DatePicker
+                        label="Start Date"
+                        value={universalFilters.startDate}
+                        onChange={(newValue) => handleDateChange('startDate', newValue)}
+                        slotProps={{ textField: { size: 'small', sx: { width: '100%' } } }}
+                      />
+                      <DatePicker
+                        label="End Date"
+                        value={universalFilters.endDate}
+                        onChange={(newValue) => handleDateChange('endDate', newValue)}
+                        slotProps={{ textField: { size: 'small', sx: { width: '100%' } } }}
+                      />
+                    </Box>
+                  </LocalizationProvider>
+                </Grid>
               </Grid>
-            </Grid>
-            <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <FilterStatus filters={universalFilters} />
-              <Button 
-                variant="outlined" 
-                startIcon={<ClearIcon />}
-                onClick={clearFilters}
-                size="small"
+              <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <FilterStatus filters={universalFilters} />
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                  <Button 
+                    variant="outlined" 
+                    startIcon={<ClearIcon />}
+                    onClick={clearFilters}
+                    size="small"
+                  >
+                    Clear All Filters
+                  </Button>
+                </Box>
+              </Box>
+              <Snackbar
+                open={snackbar.open}
+                autoHideDuration={6000}
+                onClose={handleCloseSnackbar}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
               >
-                Clear All Filters
-              </Button>
-            </Box>
-          </Paper>
+                <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
+                  {snackbar.message}
+                </Alert>
+              </Snackbar>
+            </Paper>
+          )}
 
           {tabValue === 0 && (
             <>
@@ -886,6 +938,14 @@ function App() {
                   />
                 </Grid>
               </Grid>
+            </>
+          )}
+
+          {tabValue === 7 && (
+            <>
+              <Box sx={{ mb: 2 }}>
+                <BudgetDashboard />
+              </Box>
             </>
           )}
         </Box>
